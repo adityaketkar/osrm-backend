@@ -3,23 +3,32 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"time"
 )
 
+type trafficProxyFlags struct {
+	port            int
+	ip              string
+	region          string
+	trafficProvider string
+	mapProvider     string
+}
+
 var flags struct {
-	port          int
-	ip            string
-	mappingFile   string
-	csvFile       string
-	highPrecision bool
+	trafficProxyFlags trafficProxyFlags
+	mappingFile       string
+	csvFile           string
 }
 
 func init() {
-	flag.IntVar(&flags.port, "p", 6666, "traffic proxy listening port")
-	flag.StringVar(&flags.ip, "c", "127.0.0.1", "traffic proxy ip address")
+	flag.IntVar(&flags.trafficProxyFlags.port, "p", 10086, "traffic proxy listening port")
+	flag.StringVar(&flags.trafficProxyFlags.ip, "c", "127.0.0.1", "traffic proxy ip address")
+	flag.StringVar(&flags.trafficProxyFlags.region, "region", "na", "region")
+	flag.StringVar(&flags.trafficProxyFlags.trafficProvider, "traffic", "", "traffic data provider")
+	flag.StringVar(&flags.trafficProxyFlags.mapProvider, "map", "", "map data provider")
 	flag.StringVar(&flags.mappingFile, "m", "wayid2nodeids.csv", "OSRM way id to node ids mapping table")
 	flag.StringVar(&flags.csvFile, "f", "traffic.csv", "OSRM traffic csv file")
-	flag.BoolVar(&flags.highPrecision, "d", false, "use high precision speeds, i.e. decimal")
 }
 
 const TASKNUM = 128
@@ -36,7 +45,17 @@ func main() {
 
 	isFlowDoneChan := make(chan bool, 1)
 	wayid2speed := make(map[int64]int)
-	go getTrafficFlow(flags.ip, flags.port, wayid2speed, isFlowDoneChan)
+	go func() {
+		trafficData, err := getTrafficFlowsIncidentsByGRPC(flags.trafficProxyFlags, nil)
+		if err != nil {
+			log.Println(err)
+			isFlowDoneChan <- false
+			return
+		}
+
+		trafficData2map(*trafficData, wayid2speed)
+		isFlowDoneChan <- true
+	}()
 
 	var sources [TASKNUM]chan string
 	for i := range sources {

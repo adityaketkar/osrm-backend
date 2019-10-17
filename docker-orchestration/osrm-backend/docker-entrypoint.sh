@@ -16,9 +16,12 @@ if [ "$1" = 'routed_startup' ]; then
 
   TRAFFIC_FILE=traffic.csv
   TRAFFIC_PROXY_IP=${2:-"10.189.102.81"}
+  REGION=${3}
+  MAP_PROVIDER=${4}
+  TRAFFIC_PROVIDER=${5}
 
   cd ${DATA_PATH}
-  ${BUILD_PATH}/osrm_traffic_updater -c ${TRAFFIC_PROXY_IP} -d=false -m ${WAYID2NODEIDS_MAPPING_FILE_COMPRESSED} -f ${TRAFFIC_FILE}
+  ${BUILD_PATH}/osrm_traffic_updater -c ${TRAFFIC_PROXY_IP} -m ${WAYID2NODEIDS_MAPPING_FILE_COMPRESSED} -f ${TRAFFIC_FILE} -map ${MAP_PROVIDER} -traffic ${TRAFFIC_PROVIDER} -region ${REGION}
   ls -lh
   ${BUILD_PATH}/osrm-customize ${MAPDATA_NAME_WITH_SUFFIX}.osrm  --segment-speed-file ${TRAFFIC_FILE} ${OSRM_EXTRA_COMMAND}
   ${BUILD_PATH}/osrm-routed ${MAPDATA_NAME_WITH_SUFFIX}.osrm ${OSRM_ROUTED_STARTUP_COMMAND} &
