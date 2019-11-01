@@ -11,17 +11,20 @@ import (
 )
 
 var flags struct {
-	mappingFile string
-	csvFile     string
+	mappingFile  string
+	csvFile      string
+	blockingOnly bool
 }
 
 func init() {
 	flag.StringVar(&flags.mappingFile, "m", "wayid2nodeids.csv", "OSRM way id to node ids mapping table")
 	flag.StringVar(&flags.csvFile, "f", "traffic.csv", "OSRM traffic csv file")
+	flag.BoolVar(&flags.blockingOnly, "blocking-only", false, "Only use blocking only live traffic, i.e. flow speed < 1 km/h or blocking incident.")
 }
 
 const TASKNUM = 128
 const CACHEDOBJECTS = 4000000
+const blockingSpeedThreshold = 1 // Think it's blocking if flow speed smaller than this threshold.
 
 func main() {
 	flag.Parse()
@@ -86,7 +89,16 @@ func trafficData2map(trafficData proxy.TrafficResponse, m map[int64]int) {
 	}()
 
 	var fwdCnt, bwdCnt uint64
+	var blockingFlowCnt int64
 	for _, flow := range trafficData.FlowResponses {
+		if flow.Flow.Speed < blockingSpeedThreshold || flow.Flow.TrafficLevel == proxy.TrafficLevel_CLOSED {
+			blockingFlowCnt++
+		} else {
+			if flags.blockingOnly { // ignore non-blocking flows
+				continue
+			}
+		}
+
 		wayid := flow.Flow.WayId
 		m[wayid] = int(flow.Flow.Speed)
 
@@ -97,7 +109,24 @@ func trafficData2map(trafficData proxy.TrafficResponse, m map[int64]int) {
 		}
 	}
 
-	//TODO: support incidents
+	var blockingIncidentCnt, blockingIncidentAffectedWaysCnt int64
+	for _, incident := range trafficData.IncidentResponses {
+		if incident.Incident.IsBlocking { // only use blocking incidents
+			blockingIncidentCnt++
+			blockingIncidentAffectedWaysCnt += int64(len(incident.Incident.AffectedWayIds))
 
-	log.Printf("Load map[wayid] to speed with %d items, %d forward and %d backward.\n", (fwdCnt + bwdCnt), fwdCnt, bwdCnt)
+			for _, wayid := range incident.Incident.AffectedWayIds {
+				m[wayid] = 0
+
+				if wayid > 0 {
+					fwdCnt++
+				} else {
+					bwdCnt++
+				}
+			}
+		}
+	}
+
+	log.Printf("Load map[wayid] to speed with %d items, %d forward and %d backward. Blocking flows %d. Blocking incidents %d, affected ways %d.\n",
+		(fwdCnt + bwdCnt), fwdCnt, bwdCnt, blockingFlowCnt, blockingIncidentCnt, blockingIncidentAffectedWaysCnt)
 }
