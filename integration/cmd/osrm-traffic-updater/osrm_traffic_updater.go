@@ -6,8 +6,9 @@ import (
 	"log"
 	"time"
 
-	proxy "github.com/Telenav/osrm-backend/integration/pkg/gen-trafficproxy"
+	proxy "github.com/Telenav/osrm-backend/integration/pkg/trafficproxy"
 	"github.com/Telenav/osrm-backend/integration/pkg/trafficproxyclient"
+	"github.com/golang/glog"
 )
 
 var flags struct {
@@ -19,15 +20,15 @@ var flags struct {
 func init() {
 	flag.StringVar(&flags.mappingFile, "m", "wayid2nodeids.csv", "OSRM way id to node ids mapping table")
 	flag.StringVar(&flags.csvFile, "f", "traffic.csv", "OSRM traffic csv file")
-	flag.BoolVar(&flags.blockingOnly, "blocking-only", false, "Only use blocking only live traffic, i.e. flow speed < 1 km/h or blocking incident.")
+	flag.BoolVar(&flags.blockingOnly, "blocking-only", false, "Only use blocking only(blocking flow or blocking incident) live traffic.")
 }
 
 const TASKNUM = 128
 const CACHEDOBJECTS = 4000000
-const blockingSpeedThreshold = 1 // Think it's blocking if flow speed smaller than this threshold.
 
 func main() {
 	flag.Parse()
+	defer glog.Flush()
 
 	startTime := time.Now()
 	defer func() {
@@ -91,7 +92,7 @@ func trafficData2map(trafficData proxy.TrafficResponse, m map[int64]int) {
 	var fwdCnt, bwdCnt uint64
 	var blockingFlowCnt int64
 	for _, flow := range trafficData.FlowResponses {
-		if flow.Flow.Speed < blockingSpeedThreshold || flow.Flow.TrafficLevel == proxy.TrafficLevel_CLOSED {
+		if flow.Flow.IsBlocking() {
 			blockingFlowCnt++
 		} else {
 			if flags.blockingOnly { // ignore non-blocking flows

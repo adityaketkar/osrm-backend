@@ -4,17 +4,17 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"log"
 
-	proxy "github.com/Telenav/osrm-backend/integration/pkg/gen-trafficproxy"
+	proxy "github.com/Telenav/osrm-backend/integration/pkg/trafficproxy"
+	"github.com/golang/glog"
 )
 
-// getStreamingDeltaFlowsIncidents set up a new channel for traffic flows and incidents streaming delta.
-func getStreamingDeltaFlowsIncidents(out chan<- proxy.TrafficResponse) error {
+// StreamingDeltaFlowsIncidents set up a new channel for traffic flows and incidents streaming delta.
+func StreamingDeltaFlowsIncidents(out chan<- proxy.TrafficResponse) error {
 	defer close(out)
 
 	// make RPC client
-	conn, err := NewGRPCConnection()
+	conn, err := newGRPCConnection()
 	if err != nil {
 		return err
 	}
@@ -27,20 +27,16 @@ func getStreamingDeltaFlowsIncidents(out chan<- proxy.TrafficResponse) error {
 	client := proxy.NewTrafficServiceClient(conn)
 
 	// get flows via stream
-	log.Println("getting delta traffic flows,incidents via stream")
+	glog.Info("streaming delta traffic flows,incidents")
 	var req proxy.TrafficRequest
-	req.TrafficSource = new(proxy.TrafficSource)
-	req.TrafficSource.Region = flags.Region
-	req.TrafficSource.TrafficProvider = flags.TrafficProvider
-	req.TrafficSource.MapProvider = flags.MapProvider
-	req.TrafficType = append(req.TrafficType, proxy.TrafficType_FLOW, proxy.TrafficType_INCIDENT)
+	req.TrafficSource = params{}.newTrafficSource()
+	req.TrafficType = params{}.newTrafficType()
 	trafficDeltaStreamRequest := new(proxy.TrafficRequest_TrafficStreamingDeltaRequest)
 	trafficDeltaStreamRequest.TrafficStreamingDeltaRequest = new(proxy.TrafficStreamingDeltaRequest)
-	trafficDeltaStreamRequest.TrafficStreamingDeltaRequest.StreamingRule = new(proxy.TrafficStreamingDeltaRequest_StreamingRule)
-	trafficDeltaStreamRequest.TrafficStreamingDeltaRequest.StreamingRule.MaxSize = 1000
-	trafficDeltaStreamRequest.TrafficStreamingDeltaRequest.StreamingRule.MaxTime = 5
+	trafficDeltaStreamRequest.TrafficStreamingDeltaRequest.StreamingRule = params{}.newStreamingRule()
 	req.RequestOneof = trafficDeltaStreamRequest
 
+	glog.V(2).Infof("rpc request: %v", req)
 	stream, err := client.GetTrafficData(ctx, &req)
 	if err != nil {
 		return fmt.Errorf("GetTrafficData failed, err: %v", err)
@@ -49,12 +45,13 @@ func getStreamingDeltaFlowsIncidents(out chan<- proxy.TrafficResponse) error {
 	for {
 		resp, err := stream.Recv()
 		if err == io.EOF {
+			glog.Info("streaming delta has finished gracefully.")
 			break
 		}
 		if err != nil {
 			return fmt.Errorf("stream recv failed, err: %v", err)
 		}
-		log.Printf("[VERBOSE] received traffic data from stream, got flows count: %d, incidents count: %d\n", len(resp.FlowResponses), len(resp.IncidentResponses))
+		glog.V(2).Infof("received traffic data from stream, got flows count: %d, incidents count: %d\n", len(resp.FlowResponses), len(resp.IncidentResponses))
 		out <- *resp
 	}
 

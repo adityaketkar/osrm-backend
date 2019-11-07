@@ -1,22 +1,32 @@
 package trafficproxyclient
 
-import "flag"
+import (
+	"flag"
+	"time"
+)
 
-// Flags represent parameters to get or streaming teleanv traffic.
-type Flags struct {
-	Port            int
-	IP              string
-	Region          string
-	TrafficProvider string
-	MapProvider     string
+var flags struct {
+	port                  int
+	ip                    string
+	region                string
+	trafficProvider       string
+	mapProvider           string
+	flow                  bool
+	incident              bool
+	rpcGetTimeout         time.Duration
+	streamingDeltaMaxSize int
+	streamingDeltaMaxTime time.Duration
 }
 
-var flags Flags
-
 func init() {
-	flag.IntVar(&flags.Port, "p", 10086, "target traffic proxy port")
-	flag.StringVar(&flags.IP, "c", "127.0.0.1", "target traffic proxy ip address")
-	flag.StringVar(&flags.Region, "region", "na", "region")
-	flag.StringVar(&flags.TrafficProvider, "traffic", "", "traffic data provider")
-	flag.StringVar(&flags.MapProvider, "map", "", "map data provider")
+	flag.IntVar(&flags.port, "p", 10086, "target traffic proxy port")
+	flag.StringVar(&flags.ip, "c", "127.0.0.1", "target traffic proxy ip address")
+	flag.StringVar(&flags.region, "region", "na", "region")
+	flag.StringVar(&flags.trafficProvider, "traffic", "", "traffic data provider")
+	flag.StringVar(&flags.mapProvider, "map", "", "map data provider")
+	flag.BoolVar(&flags.flow, "flow", true, "Enable traffic flow.")
+	flag.BoolVar(&flags.incident, "incident", true, "Enable traffic incident.")
+	flag.DurationVar(&flags.rpcGetTimeout, "gettimeout", 60*time.Second, "Timeout for getting via RPC.")
+	flag.IntVar(&flags.streamingDeltaMaxSize, "stream-maxsize", 10000, "Max flows count per streaming delta send.")
+	flag.DurationVar(&flags.streamingDeltaMaxTime, "stream-maxtime", time.Second, "Max time interval per streaming delta send.")
 }
