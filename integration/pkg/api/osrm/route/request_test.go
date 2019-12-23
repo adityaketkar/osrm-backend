@@ -1,60 +1,63 @@
-package osrmv1
+package route
 
 import (
 	"reflect"
 	"testing"
+
+	"github.com/Telenav/osrm-backend/integration/pkg/api/osrm/coordinate"
+	"github.com/Telenav/osrm-backend/integration/pkg/api/osrm/route/options"
 )
 
 func TestRouteRequestURI(t *testing.T) {
 	cases := []struct {
-		r      RouteRequest
+		r      Request
 		expect string
 	}{
 		{
-			RouteRequest{
+			Request{
 				Service:      "route",
 				Version:      "v1",
 				Profile:      "driving",
-				Coordinates:  Coordinates{Coordinate{37.364336, -122.006349}, Coordinate{37.313767, -121.875654}},
-				Alternatives: AlternativesDefaultValue,
-				Steps:        StepsDefaultValue,
-				Annotations:  AnnotationsDefaultValue,
+				Coordinates:  coordinate.Coordinates{coordinate.Coordinate{37.364336, -122.006349}, coordinate.Coordinate{37.313767, -121.875654}},
+				Alternatives: options.AlternativesDefaultValue,
+				Steps:        options.StepsDefaultValue,
+				Annotations:  options.AnnotationsDefaultValue,
 			},
 			"/route/v1/driving/-122.006349,37.364336;-121.875654,37.313767",
 		},
 		{
-			RouteRequest{
+			Request{
 				Service:      "route",
 				Version:      "v1",
 				Profile:      "driving",
-				Coordinates:  Coordinates{Coordinate{37.364336, -122.006349}, Coordinate{37.313767, -121.875654}},
-				Alternatives: AlternativesValueTrue,
-				Steps:        StepsDefaultValue,
-				Annotations:  AnnotationsDefaultValue,
+				Coordinates:  coordinate.Coordinates{coordinate.Coordinate{37.364336, -122.006349}, coordinate.Coordinate{37.313767, -121.875654}},
+				Alternatives: options.AlternativesValueTrue,
+				Steps:        options.StepsDefaultValue,
+				Annotations:  options.AnnotationsDefaultValue,
 			},
 			"/route/v1/driving/-122.006349,37.364336;-121.875654,37.313767?alternatives=true",
 		},
 		{
-			RouteRequest{
+			Request{
 				Service:      "route",
 				Version:      "v1",
 				Profile:      "driving",
-				Coordinates:  Coordinates{Coordinate{37.364336, -122.006349}, Coordinate{37.313767, -121.875654}},
+				Coordinates:  coordinate.Coordinates{coordinate.Coordinate{37.364336, -122.006349}, coordinate.Coordinate{37.313767, -121.875654}},
 				Alternatives: "100",
 				Steps:        true,
-				Annotations:  AnnotationsDefaultValue,
+				Annotations:  options.AnnotationsDefaultValue,
 			},
 			"/route/v1/driving/-122.006349,37.364336;-121.875654,37.313767?alternatives=100&steps=true",
 		},
 		{
-			RouteRequest{
+			Request{
 				Service:      "route",
 				Version:      "v1",
 				Profile:      "driving",
-				Coordinates:  Coordinates{Coordinate{37.364336, -122.006349}, Coordinate{37.313767, -121.875654}},
+				Coordinates:  coordinate.Coordinates{coordinate.Coordinate{37.364336, -122.006349}, coordinate.Coordinate{37.313767, -121.875654}},
 				Alternatives: "5",
 				Steps:        true,
-				Annotations:  AnnotationsValueTrue,
+				Annotations:  options.AnnotationsValueTrue,
 			},
 			"/route/v1/driving/-122.006349,37.364336;-121.875654,37.313767?alternatives=5&annotations=true&steps=true",
 		},
@@ -73,84 +76,84 @@ func TestParseRouteRequest(t *testing.T) {
 
 	cases := []struct {
 		requestURI string
-		expect     *RouteRequest
+		expect     *Request
 		expectFail bool
 	}{
 		{
 			"/route/v1/driving/-122.006349,37.364336;-121.875654,37.313767?&alternatives=5&annotations=true&steps=true",
-			&RouteRequest{
+			&Request{
 				Service:      "route",
 				Version:      "v1",
 				Profile:      "driving",
-				Coordinates:  Coordinates{Coordinate{37.364336, -122.006349}, Coordinate{37.313767, -121.875654}},
+				Coordinates:  coordinate.Coordinates{coordinate.Coordinate{37.364336, -122.006349}, coordinate.Coordinate{37.313767, -121.875654}},
 				Alternatives: "5",
 				Steps:        true,
-				Annotations:  AnnotationsValueTrue,
+				Annotations:  options.AnnotationsValueTrue,
 			},
 			false,
 		},
 		{
 			"http://localhost:8080/route/v1/driving/-122.006349,37.364336;-121.875654,37.313767?alternatives=5&annotations=true&steps=true",
-			&RouteRequest{
+			&Request{
 				Service:      "route",
 				Version:      "v1",
 				Profile:      "driving",
-				Coordinates:  Coordinates{Coordinate{37.364336, -122.006349}, Coordinate{37.313767, -121.875654}},
+				Coordinates:  coordinate.Coordinates{coordinate.Coordinate{37.364336, -122.006349}, coordinate.Coordinate{37.313767, -121.875654}},
 				Alternatives: "5",
 				Steps:        true,
-				Annotations:  AnnotationsValueTrue,
+				Annotations:  options.AnnotationsValueTrue,
 			},
 			false,
 		},
 		{
 			"/route/v1/driving/-122.006349,37.364336;-121.875654,37.313767",
-			&RouteRequest{
+			&Request{
 				Service:      "route",
 				Version:      "v1",
 				Profile:      "driving",
-				Coordinates:  Coordinates{Coordinate{37.364336, -122.006349}, Coordinate{37.313767, -121.875654}},
-				Alternatives: AlternativesDefaultValue,
-				Steps:        StepsDefaultValue,
-				Annotations:  AnnotationsDefaultValue,
+				Coordinates:  coordinate.Coordinates{coordinate.Coordinate{37.364336, -122.006349}, coordinate.Coordinate{37.313767, -121.875654}},
+				Alternatives: options.AlternativesDefaultValue,
+				Steps:        options.StepsDefaultValue,
+				Annotations:  options.AnnotationsDefaultValue,
 			},
 			false,
 		},
 		{
 			"http://localhost:8080/route/v1/driving/-122.006349,37.364336;-121.875654,37.313767",
-			&RouteRequest{
+			&Request{
 				Service:      "route",
 				Version:      "v1",
 				Profile:      "driving",
-				Coordinates:  Coordinates{Coordinate{37.364336, -122.006349}, Coordinate{37.313767, -121.875654}},
-				Alternatives: AlternativesDefaultValue,
-				Steps:        StepsDefaultValue,
-				Annotations:  AnnotationsDefaultValue,
+				Coordinates:  coordinate.Coordinates{coordinate.Coordinate{37.364336, -122.006349}, coordinate.Coordinate{37.313767, -121.875654}},
+				Alternatives: options.AlternativesDefaultValue,
+				Steps:        options.StepsDefaultValue,
+				Annotations:  options.AnnotationsDefaultValue,
 			},
 			false,
 		},
 		{
 			"route/v1/driving/-122.006349,37.364336;-121.875654,37.313767",
-			&RouteRequest{
+			&Request{
 				Service:      "route",
 				Version:      "v1",
 				Profile:      "driving",
-				Coordinates:  Coordinates{Coordinate{37.364336, -122.006349}, Coordinate{37.313767, -121.875654}},
-				Alternatives: AlternativesDefaultValue,
-				Steps:        StepsDefaultValue,
-				Annotations:  AnnotationsDefaultValue,
+				Coordinates:  coordinate.Coordinates{coordinate.Coordinate{37.364336, -122.006349}, coordinate.Coordinate{37.313767, -121.875654}},
+				Alternatives: options.AlternativesDefaultValue,
+				Steps:        options.StepsDefaultValue,
+				Annotations:  options.AnnotationsDefaultValue,
 			},
 			false,
 		},
 		{
 			"/route/v1/driving/-122.006349,37.364336;-121.875654,37.313767?alternatives=-1&annotations=tru,&steps=alse,",
-			&RouteRequest{
+			&Request{
 				Service:      "route",
 				Version:      "v1",
 				Profile:      "driving",
-				Coordinates:  Coordinates{Coordinate{37.364336, -122.006349}, Coordinate{37.313767, -121.875654}},
-				Alternatives: AlternativesDefaultValue,
-				Steps:        StepsDefaultValue,
-				Annotations:  AnnotationsDefaultValue,
+				Coordinates:  coordinate.Coordinates{coordinate.Coordinate{37.364336, -122.006349}, coordinate.Coordinate{37.313767, -121.875654}},
+				Alternatives: options.AlternativesDefaultValue,
+				Steps:        options.StepsDefaultValue,
+				Annotations:  options.AnnotationsDefaultValue,
 			},
 			false,
 		},
@@ -160,7 +163,7 @@ func TestParseRouteRequest(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		r, err := ParseRouteRequestURI(c.requestURI)
+		r, err := ParseRequestURI(c.requestURI)
 		if err != nil && c.expectFail {
 			continue //right
 		} else if (err != nil && !c.expectFail) || (err == nil && c.expectFail) {
@@ -215,8 +218,8 @@ func TestParseAnnotations(t *testing.T) {
 		expect     string
 		expectFail bool
 	}{
-		{"true", ValueTrue, false},
-		{"false", ValueFalse, false},
+		{"true", options.ValueTrue, false},
+		{"false", options.ValueFalse, false},
 		{"nodes", "nodes", false},
 		{"nodes,distance", "nodes,distance", false},
 		{"nodes,distance,duration,datasources,weight,speed", "nodes,distance,duration,datasources,weight,speed", false},

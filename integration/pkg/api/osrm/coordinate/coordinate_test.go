@@ -1,4 +1,4 @@
-package osrmv1
+package coordinate
 
 import (
 	"reflect"

@@ -4,12 +4,12 @@ import (
 	"math"
 
 	"github.com/Telenav/osrm-backend/integration/graph"
-	"github.com/Telenav/osrm-backend/integration/pkg/api/osrmv1"
+	"github.com/Telenav/osrm-backend/integration/pkg/api/osrm/route"
 	"github.com/golang/glog"
 )
 
-func (h *Handler) updateRoutesByTraffic(routes []*osrmv1.Route) []*osrmv1.Route {
-	updatedRoutes := []*osrmv1.Route{}
+func (h *Handler) updateRoutesByTraffic(routes []*route.Route) []*route.Route {
+	updatedRoutes := []*route.Route{}
 	for _, r := range routes {
 		h.updateRouteByTraffic(r)
 		if math.IsInf(r.Duration, 0) || math.IsInf(r.Weight, 0) {
@@ -20,7 +20,7 @@ func (h *Handler) updateRoutesByTraffic(routes []*osrmv1.Route) []*osrmv1.Route 
 	return updatedRoutes
 }
 
-func (h *Handler) updateRouteByTraffic(route *osrmv1.Route) {
+func (h *Handler) updateRouteByTraffic(route *route.Route) {
 	if route == nil {
 		glog.Error("empty route")
 		return
@@ -44,7 +44,7 @@ func (h *Handler) updateRouteByTraffic(route *osrmv1.Route) {
 	route.Weight = newRouteWeight
 }
 
-func (h *Handler) updateLegByTraffic(leg *osrmv1.RouteLeg) {
+func (h *Handler) updateLegByTraffic(leg *route.Leg) {
 	if leg == nil {
 		glog.Error("empty leg")
 		return

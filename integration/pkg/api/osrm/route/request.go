@@ -1,6 +1,6 @@
-// Package osrmv1 implements OSRM api v1 in Go code.
+// Package route implements OSRM route api v1 in Go code.
 // doc: https://github.com/Telenav/osrm-backend/blob/master-telenav/docs/http.md
-package osrmv1
+package route
 
 import (
 	"fmt"
@@ -11,14 +11,16 @@ import (
 	"github.com/golang/glog"
 
 	"github.com/Telenav/osrm-backend/integration/pkg/api"
+	"github.com/Telenav/osrm-backend/integration/pkg/api/osrm/coordinate"
+	"github.com/Telenav/osrm-backend/integration/pkg/api/osrm/route/options"
 )
 
-// RouteRequest represent OSRM api v1 route request parameters.
-type RouteRequest struct {
+// Request represent OSRM api v1 route request parameters.
+type Request struct {
 	Service     string
 	Version     string
 	Profile     string
-	Coordinates Coordinates
+	Coordinates coordinate.Coordinates
 
 	// Route service query parameters
 	Alternatives string
@@ -29,72 +31,72 @@ type RouteRequest struct {
 
 }
 
-// NewRouteRequest create an empty RouteRequest.
-func NewRouteRequest() *RouteRequest {
-	return &RouteRequest{
+// NewRequest create an empty route Request.
+func NewRequest() *Request {
+	return &Request{
 		Service:      "route",
 		Version:      "v1",
 		Profile:      "driving",
-		Coordinates:  Coordinates{},
-		Alternatives: AlternativesDefaultValue,
-		Steps:        StepsDefaultValue,
-		Annotations:  AnnotationsDefaultValue,
+		Coordinates:  coordinate.Coordinates{},
+		Alternatives: options.AlternativesDefaultValue,
+		Steps:        options.StepsDefaultValue,
+		Annotations:  options.AnnotationsDefaultValue,
 	}
 }
 
-// ParseRouteRequestURI parse Request URI to RouteRequest.
-func ParseRouteRequestURI(requestURI string) (*RouteRequest, error) {
+// ParseRequestURI parse Request URI to Request.
+func ParseRequestURI(requestURI string) (*Request, error) {
 
 	u, err := url.Parse(requestURI)
 	if err != nil {
 		return nil, err
 	}
 
-	return ParseRouteRequestURL(u)
+	return ParseRequestURL(u)
 }
 
-// ParseRouteRequestURL parse Request URL to RouteRequest.
-func ParseRouteRequestURL(url *url.URL) (*RouteRequest, error) {
+// ParseRequestURL parse Request URL to Request.
+func ParseRequestURL(url *url.URL) (*Request, error) {
 	if url == nil {
 		return nil, fmt.Errorf("empty URL input")
 	}
 
-	routeReq := NewRouteRequest()
+	req := NewRequest()
 
-	if err := routeReq.parsePath(url.Path); err != nil {
+	if err := req.parsePath(url.Path); err != nil {
 		return nil, err
 	}
-	routeReq.parseQuery(url.Query())
+	req.parseQuery(url.Query())
 
-	return routeReq, nil
+	return req, nil
 }
 
-// QueryValues convert RouteRequest to url.Values.
-func (r *RouteRequest) QueryValues() (v url.Values) {
+// QueryValues convert route Request to url.Values.
+func (r *Request) QueryValues() (v url.Values) {
 
 	v = make(url.Values)
 
-	if r.Alternatives != AlternativesDefaultValue {
-		v.Add(KeyAlternatives, r.Alternatives)
+	if r.Alternatives != options.AlternativesDefaultValue {
+		v.Add(options.KeyAlternatives, r.Alternatives)
 	}
-	if r.Steps != StepsDefaultValue {
-		v.Add(KeySteps, strconv.FormatBool(r.Steps))
+	if r.Steps != options.StepsDefaultValue {
+		v.Add(options.KeySteps, strconv.FormatBool(r.Steps))
 	}
-	if r.Annotations != AnnotationsDefaultValue {
-		v.Add(KeyAnnotations, r.Annotations)
+	if r.Annotations != options.AnnotationsDefaultValue {
+		v.Add(options.KeyAnnotations, r.Annotations)
 	}
 
 	return
 }
 
 // QueryString convert RouteRequest to "URL encoded" form ("bar=baz&foo=quux") .
-func (r *RouteRequest) QueryString() string {
+func (r *Request) QueryString() string {
 	return r.QueryValues().Encode()
 }
 
 // RequestURI convert RouteRequest to RequestURI (e.g. "/path?foo=bar").
 // see more in https://golang.org/pkg/net/url/#URL.RequestURI
-func (r *RouteRequest) RequestURI() string {
+func (r *Request) RequestURI() string {
 	s := r.pathPrefix()
 
 	coordinatesStr := r.Coordinates.String()
@@ -111,17 +113,17 @@ func (r *RouteRequest) RequestURI() string {
 }
 
 // AlternativesNumber returns alternatives as number value.
-func (r *RouteRequest) AlternativesNumber() int {
+func (r *Request) AlternativesNumber() int {
 	_, n, _ := parseAlternatives(r.Alternatives)
 	return n
 }
 
-func (r *RouteRequest) pathPrefix() string {
+func (r *Request) pathPrefix() string {
 	//i.e. "/route/v1/driving/"
 	return api.Slash + r.Service + api.Slash + r.Version + api.Slash + r.Profile + api.Slash
 }
 
-func (r *RouteRequest) parsePath(path string) error {
+func (r *Request) parsePath(path string) error {
 	p := path
 	p = strings.TrimPrefix(p, api.Slash)
 	p = strings.TrimSuffix(p, api.Slash)
@@ -135,22 +137,22 @@ func (r *RouteRequest) parsePath(path string) error {
 	r.Profile = s[2]
 
 	var err error
-	if r.Coordinates, err = ParseCoordinates(s[3]); err != nil {
+	if r.Coordinates, err = coordinate.ParseCoordinates(s[3]); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (r *RouteRequest) parseQuery(values url.Values) {
+func (r *Request) parseQuery(values url.Values) {
 
-	if v := values.Get(KeyAlternatives); len(v) > 0 {
+	if v := values.Get(options.KeyAlternatives); len(v) > 0 {
 		if alternatives, _, err := parseAlternatives(v); err == nil {
 			r.Alternatives = alternatives
 		}
 	}
 
-	if v := values.Get(KeySteps); len(v) > 0 {
+	if v := values.Get(options.KeySteps); len(v) > 0 {
 		if b, err := strconv.ParseBool(v); err == nil {
 			r.Steps = b
 		} else {
@@ -158,7 +160,7 @@ func (r *RouteRequest) parseQuery(values url.Values) {
 		}
 	}
 
-	if v := values.Get(KeyAnnotations); len(v) > 0 {
+	if v := values.Get(options.KeyAnnotations); len(v) > 0 {
 		if annotations, err := parseAnnotations(v); err == nil {
 			r.Annotations = annotations
 		}
@@ -186,14 +188,14 @@ func parseAlternatives(s string) (string, int, error) {
 func parseAnnotations(s string) (string, error) {
 
 	validAnnotationsValues := map[string]struct{}{
-		AnnotationsValueTrue:        struct{}{},
-		AnnotationsValueFalse:       struct{}{},
-		AnnotationsValueNodes:       struct{}{},
-		AnnotationsValueDistance:    struct{}{},
-		AnnotationsValueDuration:    struct{}{},
-		AnnotationsValueDataSources: struct{}{},
-		AnnotationsValueWeight:      struct{}{},
-		AnnotationsValueSpeed:       struct{}{},
+		options.AnnotationsValueTrue:        struct{}{},
+		options.AnnotationsValueFalse:       struct{}{},
+		options.AnnotationsValueNodes:       struct{}{},
+		options.AnnotationsValueDistance:    struct{}{},
+		options.AnnotationsValueDuration:    struct{}{},
+		options.AnnotationsValueDataSources: struct{}{},
+		options.AnnotationsValueWeight:      struct{}{},
+		options.AnnotationsValueSpeed:       struct{}{},
 	}
 
 	splits := strings.Split(s, api.Comma)

@@ -1,4 +1,5 @@
-package osrmv1
+// Package coordinate defines OSRM request coordinates.
+package coordinate
 
 import (
 	"fmt"
