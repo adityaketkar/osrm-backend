@@ -8,6 +8,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/Telenav/osrm-backend/integration/pkg/api/osrm/genericoptions"
+
 	"github.com/golang/glog"
 
 	"github.com/Telenav/osrm-backend/integration/pkg/api"
@@ -17,30 +19,56 @@ import (
 
 // Request represent OSRM api v1 route request parameters.
 type Request struct {
+
+	// Path
 	Service     string
 	Version     string
 	Profile     string
 	Coordinates coordinate.Coordinates
 
+	// generic parameters
+	Bearings      genericoptions.Elements
+	Radiuses      genericoptions.Elements
+	GenerateHints bool
+	Hints         genericoptions.Elements
+	Approaches    genericoptions.Elements
+	Exclude       genericoptions.Classes
+
 	// Route service query parameters
-	Alternatives string
-	Steps        bool
-	Annotations  string
-
-	//TODO: other parameters
-
+	Alternatives     string
+	Steps            bool
+	Annotations      string
+	Geometries       string
+	Overview         string
+	ContinueStraight string
+	Waypoints        coordinate.Indexes
 }
 
 // NewRequest create an empty route Request.
 func NewRequest() *Request {
 	return &Request{
-		Service:      "route",
-		Version:      "v1",
-		Profile:      "driving",
-		Coordinates:  coordinate.Coordinates{},
-		Alternatives: options.AlternativesDefaultValue,
-		Steps:        options.StepsDefaultValue,
-		Annotations:  options.AnnotationsDefaultValue,
+		// Path
+		Service:     "route",
+		Version:     "v1",
+		Profile:     "driving",
+		Coordinates: coordinate.Coordinates{},
+
+		// generic options
+		Bearings:      genericoptions.Elements{},
+		Radiuses:      genericoptions.Elements{},
+		GenerateHints: genericoptions.GenerateHintsDefaultValue,
+		Hints:         genericoptions.Elements{},
+		Approaches:    genericoptions.Elements{},
+		Exclude:       genericoptions.Classes{},
+
+		// route options
+		Alternatives:     options.AlternativesDefaultValue,
+		Steps:            options.StepsDefaultValue,
+		Annotations:      options.AnnotationsDefaultValue,
+		Geometries:       options.GeometriesDefaultValue,
+		Overview:         options.OverviewDefaultValue,
+		ContinueStraight: options.ContinueStraightDefaultValue,
+		Waypoints:        coordinate.Indexes{},
 	}
 }
 
@@ -56,17 +84,20 @@ func ParseRequestURI(requestURI string) (*Request, error) {
 }
 
 // ParseRequestURL parse Request URL to Request.
-func ParseRequestURL(url *url.URL) (*Request, error) {
-	if url == nil {
+func ParseRequestURL(u *url.URL) (*Request, error) {
+	if u == nil {
 		return nil, fmt.Errorf("empty URL input")
 	}
 
 	req := NewRequest()
 
-	if err := req.parsePath(url.Path); err != nil {
+	if err := req.parsePath(u.Path); err != nil {
 		return nil, err
 	}
-	req.parseQuery(url.Query())
+
+	//NOTE: url.Query() will also use ";" as seprator, which is not expected. So we implements our own version instead.
+	//req.parseQuery(u.Query())
+	req.parseQuery(api.ParseQueryDiscardError(u.RawQuery))
 
 	return req, nil
 }
@@ -76,6 +107,27 @@ func (r *Request) QueryValues() (v url.Values) {
 
 	v = make(url.Values)
 
+	// generic options
+	if len(r.Bearings) > 0 {
+		v.Add(genericoptions.KeyBearings, r.Bearings.String())
+	}
+	if len(r.Radiuses) > 0 {
+		v.Add(genericoptions.KeyRadiuses, r.Radiuses.String())
+	}
+	if r.GenerateHints != genericoptions.GenerateHintsDefaultValue {
+		v.Add(genericoptions.KeyGenerateHints, strconv.FormatBool(r.GenerateHints))
+	}
+	if len(r.Hints) > 0 {
+		v.Add(genericoptions.KeyHints, r.Hints.String())
+	}
+	if len(r.Approaches) > 0 {
+		v.Add(genericoptions.KeyApproaches, r.Approaches.String())
+	}
+	if len(r.Exclude) > 0 {
+		v.Add(genericoptions.KeyExclude, r.Exclude.String())
+	}
+
+	// route options
 	if r.Alternatives != options.AlternativesDefaultValue {
 		v.Add(options.KeyAlternatives, r.Alternatives)
 	}
@@ -85,13 +137,31 @@ func (r *Request) QueryValues() (v url.Values) {
 	if r.Annotations != options.AnnotationsDefaultValue {
 		v.Add(options.KeyAnnotations, r.Annotations)
 	}
+	if r.Geometries != options.GeometriesDefaultValue {
+		v.Add(options.KeyGeometries, r.Geometries)
+	}
+	if r.Overview != options.OverviewDefaultValue {
+		v.Add(options.KeyOverview, r.Overview)
+	}
+	if r.ContinueStraight != options.ContinueStraightDefaultValue {
+		v.Add(options.KeyContinueStraight, r.ContinueStraight)
+	}
+	if len(r.Waypoints) > 0 {
+		v.Add(options.KeyWaypoints, r.Waypoints.String())
+	}
 
 	return
 }
 
-// QueryString convert RouteRequest to "URL encoded" form ("bar=baz&foo=quux") .
+// QueryString convert RouteRequest to "URL encoded" form ("bar=baz&foo=quux"), but NOT escape.
 func (r *Request) QueryString() string {
-	return r.QueryValues().Encode()
+	rawQuery := r.QueryValues().Encode()
+	query, err := url.QueryUnescape(rawQuery)
+	if err != nil {
+		glog.Warning(err)
+		return rawQuery // use rawQuery if unescape fail
+	}
+	return query
 }
 
 // RequestURI convert RouteRequest to RequestURI (e.g. "/path?foo=bar").
@@ -114,7 +184,7 @@ func (r *Request) RequestURI() string {
 
 // AlternativesNumber returns alternatives as number value.
 func (r *Request) AlternativesNumber() int {
-	_, n, _ := parseAlternatives(r.Alternatives)
+	_, n, _ := options.ParseAlternatives(r.Alternatives)
 	return n
 }
 
@@ -146,67 +216,71 @@ func (r *Request) parsePath(path string) error {
 
 func (r *Request) parseQuery(values url.Values) {
 
+	if v := values.Get(genericoptions.KeyBearings); len(v) > 0 {
+		if bearings, err := genericoptions.ParseElemenets(v); err == nil {
+			r.Bearings = bearings
+		}
+	}
+	if v := values.Get(genericoptions.KeyRadiuses); len(v) > 0 {
+		if radiuses, err := genericoptions.ParseElemenets(v); err == nil {
+			r.Radiuses = radiuses
+		}
+	}
+	if v := values.Get(genericoptions.KeyGenerateHints); len(v) > 0 {
+		if generateHints, err := genericoptions.ParseGenerateHints(v); err == nil {
+			r.GenerateHints = generateHints
+		}
+	}
+	if v := values.Get(genericoptions.KeyHints); len(v) > 0 {
+		if hints, err := genericoptions.ParseElemenets(v); err == nil {
+			r.Hints = hints
+		}
+	}
+	if v := values.Get(genericoptions.KeyApproaches); len(v) > 0 {
+		if approaches, err := genericoptions.ParseElemenets(v); err == nil {
+			r.Approaches = approaches
+		}
+	}
+	if v := values.Get(genericoptions.KeyExclude); len(v) > 0 {
+		if classes, err := genericoptions.ParseClasses(v); err == nil {
+			r.Exclude = classes
+		}
+	}
+
 	if v := values.Get(options.KeyAlternatives); len(v) > 0 {
-		if alternatives, _, err := parseAlternatives(v); err == nil {
+		if alternatives, _, err := options.ParseAlternatives(v); err == nil {
 			r.Alternatives = alternatives
 		}
 	}
-
 	if v := values.Get(options.KeySteps); len(v) > 0 {
-		if b, err := strconv.ParseBool(v); err == nil {
+		if b, err := options.ParseSteps(v); err == nil {
 			r.Steps = b
-		} else {
-			glog.Warning(err)
 		}
 	}
-
 	if v := values.Get(options.KeyAnnotations); len(v) > 0 {
-		if annotations, err := parseAnnotations(v); err == nil {
+		if annotations, err := options.ParseAnnotations(v); err == nil {
 			r.Annotations = annotations
 		}
 	}
-
-}
-
-func parseAlternatives(s string) (string, int, error) {
-
-	if n, err := strconv.ParseUint(s, 10, 32); err == nil {
-		return s, int(n), nil
-	}
-	if b, err := strconv.ParseBool(s); err == nil {
-		if b {
-			return s, 2, nil // true : 2
+	if v := values.Get(options.KeyGeometries); len(v) > 0 {
+		if geometries, err := options.ParseGeometries(v); err == nil {
+			r.Geometries = geometries
 		}
-		return s, 1, nil // false : 1
 	}
-
-	err := fmt.Errorf("invalid alternatives value: %s", s)
-	glog.Warning(err)
-	return "", 1, err // use value 1 if fail
-}
-
-func parseAnnotations(s string) (string, error) {
-
-	validAnnotationsValues := map[string]struct{}{
-		options.AnnotationsValueTrue:        struct{}{},
-		options.AnnotationsValueFalse:       struct{}{},
-		options.AnnotationsValueNodes:       struct{}{},
-		options.AnnotationsValueDistance:    struct{}{},
-		options.AnnotationsValueDuration:    struct{}{},
-		options.AnnotationsValueDataSources: struct{}{},
-		options.AnnotationsValueWeight:      struct{}{},
-		options.AnnotationsValueSpeed:       struct{}{},
+	if v := values.Get(options.KeyOverview); len(v) > 0 {
+		if overview, err := options.ParseOverview(v); err == nil {
+			r.Overview = overview
+		}
 	}
-
-	splits := strings.Split(s, api.Comma)
-	for _, split := range splits {
-		if _, found := validAnnotationsValues[split]; !found {
-
-			err := fmt.Errorf("invalid annotations value: %s", s)
-			glog.Warning(err)
-			return "", err
+	if v := values.Get(options.KeyContinueStraight); len(v) > 0 {
+		if continueStraight, err := options.ParseContinueStraight(v); err == nil {
+			r.ContinueStraight = continueStraight
+		}
+	}
+	if v := values.Get(options.KeyWaypoints); len(v) > 0 {
+		if indexes, err := coordinate.PraseIndexes(v); err == nil {
+			r.Waypoints = indexes
 		}
 	}
 
-	return s, nil
 }
