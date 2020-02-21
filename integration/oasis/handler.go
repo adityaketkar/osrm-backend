@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/Telenav/osrm-backend/integration/oasis/osrmconnector"
+	"github.com/Telenav/osrm-backend/integration/oasis/searchconnector"
 	"github.com/Telenav/osrm-backend/integration/pkg/api/oasis"
 	"github.com/Telenav/osrm-backend/integration/pkg/api/osrm/route"
 	"github.com/Telenav/osrm-backend/integration/pkg/api/search/nearbychargestation"
@@ -14,13 +15,16 @@ import (
 
 // Handler handles oasis request and provide response
 type Handler struct {
-	osrmConnector *osrmconnector.OSRMConnector
+	osrmConnector     *osrmconnector.OSRMConnector
+	tnSearchConnector *searchconnector.TNSearchConnector
 }
 
 // New creates new Handler object
-func New(osrmBackend string) *Handler {
+func New(osrmBackend, searchEndpoint, apiKey, apiSignature string) *Handler {
+	// @todo: need make sure connectivity is on and continues available
 	return &Handler{
-		osrmConnector: osrmconnector.NewOSRMConnector(osrmBackend),
+		osrmConnector:     osrmconnector.NewOSRMConnector(osrmBackend),
+		tnSearchConnector: searchconnector.NewTNSearchConnector(searchEndpoint, apiKey, apiSignature),
 	}
 }
 
@@ -36,7 +40,6 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// check whether has enough energy
 	route, err := h.requestRoute4InputOrigDest(oasisReq)
 	if err != nil {
 		glog.Error(err)
@@ -45,6 +48,16 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	// check whether orig and dest is reachable
+	if len(route.Routes) == 0 {
+		info := "Orig and destination is not reachable for request " + oasisReq.RequestURI() + "."
+		glog.Info(info)
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprintf(w, info)
+		return
+	}
+
+	// check whether has enough energy
 	b, remainRange, err := hasEnoughEnergy(oasisReq.CurrRange, oasisReq.SafeLevel, route)
 	if err != nil {
 		glog.Error(err)
@@ -55,9 +68,17 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
 	if b {
 		h.generateOASISResponse(w, route, remainRange)
-	} else {
-		generateFakeOASISResponse(w, oasisReq)
+		return
 	}
+
+	// check whether could achieve by single charge
+	overlap := getOverlapChargeStations4OrigDest(oasisReq, route.Routes[0].Distance, h.osrmConnector, h.tnSearchConnector)
+	if len(overlap) > 0 {
+		generateResponse4SingleChargeStation(w, oasisReq, overlap, h.osrmConnector)
+		return
+	}
+
+	generateFakeOASISResponse(w, oasisReq)
 }
 
 func (h *Handler) requestRoute4InputOrigDest(oasisReq *oasis.Request) (*route.Response, error) {
