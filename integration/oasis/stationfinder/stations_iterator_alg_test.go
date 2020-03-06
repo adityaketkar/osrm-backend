@@ -73,7 +73,7 @@ func (ft *fakeTableResponse) Request4Table(r *table.Request) <-chan osrmconnecto
 	return c
 }
 
-func TestCalcCostBetweenChargeStationsPair(t *testing.T) {
+func TestCalcNeighborInfoPair(t *testing.T) {
 	// from: station1, station2, station3, station4
 	sf1 := createMockOrigStationFinder1()
 	// to: station6, station7
@@ -85,8 +85,8 @@ func TestCalcCostBetweenChargeStationsPair(t *testing.T) {
 	if err != nil {
 		t.Errorf("expect no error but generate error of %v", err)
 	}
-	expect := []CostBetweenChargeStations{
-		CostBetweenChargeStations{
+	expect := []NeighborInfo{
+		NeighborInfo{
 			FromID: "station1",
 			ToID:   "station6",
 			Cost: Cost{
@@ -94,7 +94,7 @@ func TestCalcCostBetweenChargeStationsPair(t *testing.T) {
 				Distance: 2,
 			},
 		},
-		CostBetweenChargeStations{
+		NeighborInfo{
 			FromID: "station1",
 			ToID:   "station7",
 			Cost: Cost{
@@ -102,7 +102,7 @@ func TestCalcCostBetweenChargeStationsPair(t *testing.T) {
 				Distance: 3,
 			},
 		},
-		CostBetweenChargeStations{
+		NeighborInfo{
 			FromID: "station2",
 			ToID:   "station6",
 			Cost: Cost{
@@ -110,7 +110,7 @@ func TestCalcCostBetweenChargeStationsPair(t *testing.T) {
 				Distance: 4,
 			},
 		},
-		CostBetweenChargeStations{
+		NeighborInfo{
 			FromID: "station2",
 			ToID:   "station7",
 			Cost: Cost{
@@ -118,7 +118,7 @@ func TestCalcCostBetweenChargeStationsPair(t *testing.T) {
 				Distance: 5,
 			},
 		},
-		CostBetweenChargeStations{
+		NeighborInfo{
 			FromID: "station3",
 			ToID:   "station6",
 			Cost: Cost{
@@ -126,7 +126,7 @@ func TestCalcCostBetweenChargeStationsPair(t *testing.T) {
 				Distance: 6,
 			},
 		},
-		CostBetweenChargeStations{
+		NeighborInfo{
 			FromID: "station3",
 			ToID:   "station7",
 			Cost: Cost{
@@ -134,7 +134,7 @@ func TestCalcCostBetweenChargeStationsPair(t *testing.T) {
 				Distance: 7,
 			},
 		},
-		CostBetweenChargeStations{
+		NeighborInfo{
 			FromID: "station4",
 			ToID:   "station6",
 			Cost: Cost{
@@ -142,7 +142,7 @@ func TestCalcCostBetweenChargeStationsPair(t *testing.T) {
 				Distance: 8,
 			},
 		},
-		CostBetweenChargeStations{
+		NeighborInfo{
 			FromID: "station4",
 			ToID:   "station7",
 			Cost: Cost{
@@ -216,8 +216,8 @@ func TestCalculateWeightBetweenNeighbors(t *testing.T) {
 
 	c := CalculateWeightBetweenNeighbors(locations, oc, sc)
 
-	expect_arr0 := []CostBetweenChargeStations{
-		CostBetweenChargeStations{
+	expect_arr0 := []NeighborInfo{
+		NeighborInfo{
 			FromID: "orig_location",
 			ToID:   "station1",
 			Cost: Cost{
@@ -225,7 +225,7 @@ func TestCalculateWeightBetweenNeighbors(t *testing.T) {
 				Distance: 22.2,
 			},
 		},
-		CostBetweenChargeStations{
+		NeighborInfo{
 			FromID: "orig_location",
 			ToID:   "station2",
 			Cost: Cost{
@@ -233,7 +233,7 @@ func TestCalculateWeightBetweenNeighbors(t *testing.T) {
 				Distance: 11.1,
 			},
 		},
-		CostBetweenChargeStations{
+		NeighborInfo{
 			FromID: "orig_location",
 			ToID:   "station3",
 			Cost: Cost{
@@ -241,7 +241,7 @@ func TestCalculateWeightBetweenNeighbors(t *testing.T) {
 				Distance: 33.3,
 			},
 		},
-		CostBetweenChargeStations{
+		NeighborInfo{
 			FromID: "orig_location",
 			ToID:   "station4",
 			Cost: Cost{
@@ -251,8 +251,8 @@ func TestCalculateWeightBetweenNeighbors(t *testing.T) {
 		},
 	}
 
-	expect_arr1 := []CostBetweenChargeStations{
-		CostBetweenChargeStations{
+	expect_arr1 := []NeighborInfo{
+		NeighborInfo{
 			FromID: "station1",
 			ToID:   "station6",
 			Cost: Cost{
@@ -260,7 +260,7 @@ func TestCalculateWeightBetweenNeighbors(t *testing.T) {
 				Distance: 2,
 			},
 		},
-		CostBetweenChargeStations{
+		NeighborInfo{
 			FromID: "station1",
 			ToID:   "station7",
 			Cost: Cost{
@@ -268,7 +268,7 @@ func TestCalculateWeightBetweenNeighbors(t *testing.T) {
 				Distance: 3,
 			},
 		},
-		CostBetweenChargeStations{
+		NeighborInfo{
 			FromID: "station2",
 			ToID:   "station6",
 			Cost: Cost{
@@ -276,7 +276,7 @@ func TestCalculateWeightBetweenNeighbors(t *testing.T) {
 				Distance: 4,
 			},
 		},
-		CostBetweenChargeStations{
+		NeighborInfo{
 			FromID: "station2",
 			ToID:   "station7",
 			Cost: Cost{
@@ -284,7 +284,7 @@ func TestCalculateWeightBetweenNeighbors(t *testing.T) {
 				Distance: 5,
 			},
 		},
-		CostBetweenChargeStations{
+		NeighborInfo{
 			FromID: "station3",
 			ToID:   "station6",
 			Cost: Cost{
@@ -292,7 +292,7 @@ func TestCalculateWeightBetweenNeighbors(t *testing.T) {
 				Distance: 6,
 			},
 		},
-		CostBetweenChargeStations{
+		NeighborInfo{
 			FromID: "station3",
 			ToID:   "station7",
 			Cost: Cost{
@@ -300,7 +300,7 @@ func TestCalculateWeightBetweenNeighbors(t *testing.T) {
 				Distance: 7,
 			},
 		},
-		CostBetweenChargeStations{
+		NeighborInfo{
 			FromID: "station4",
 			ToID:   "station6",
 			Cost: Cost{
@@ -308,7 +308,7 @@ func TestCalculateWeightBetweenNeighbors(t *testing.T) {
 				Distance: 8,
 			},
 		},
-		CostBetweenChargeStations{
+		NeighborInfo{
 			FromID: "station4",
 			ToID:   "station7",
 			Cost: Cost{
@@ -318,8 +318,8 @@ func TestCalculateWeightBetweenNeighbors(t *testing.T) {
 		},
 	}
 
-	expect_arr2 := []CostBetweenChargeStations{
-		CostBetweenChargeStations{
+	expect_arr2 := []NeighborInfo{
+		NeighborInfo{
 			FromID: "station6",
 			ToID:   "dest_location",
 			Cost: Cost{
@@ -327,7 +327,7 @@ func TestCalculateWeightBetweenNeighbors(t *testing.T) {
 				Distance: 66.6,
 			},
 		},
-		CostBetweenChargeStations{
+		NeighborInfo{
 			FromID: "station7",
 			ToID:   "dest_location",
 			Cost: Cost{
@@ -338,18 +338,18 @@ func TestCalculateWeightBetweenNeighbors(t *testing.T) {
 	}
 
 	for arr := range c {
-		switch len(arr.c) {
-		case 4: 
-			if !reflect.DeepEqual(arr.c, expect_arr0) {
-				t.Errorf("expect %v but got %v", expect_arr0, arr.c)
+		switch len(arr.NeighborsInfo) {
+		case 4:
+			if !reflect.DeepEqual(arr.NeighborsInfo, expect_arr0) {
+				t.Errorf("expect %v but got %v", expect_arr0, arr.NeighborsInfo)
 			}
 		case 8:
-			if !reflect.DeepEqual(arr.c, expect_arr1) {
-				t.Errorf("expect %v but got %v", expect_arr1, arr.c)
+			if !reflect.DeepEqual(arr.NeighborsInfo, expect_arr1) {
+				t.Errorf("expect %v but got %v", expect_arr1, arr.NeighborsInfo)
 			}
 		case 2:
-			if !reflect.DeepEqual(arr.c, expect_arr2) {
-				t.Errorf("expect %v but got %v", expect_arr2, arr.c)
+			if !reflect.DeepEqual(arr.NeighborsInfo, expect_arr2) {
+				t.Errorf("expect %v but got %v", expect_arr2, arr.NeighborsInfo)
 			}
 		}
 	}
@@ -363,4 +363,3 @@ func floatEquals(a, b float64) bool {
 	}
 	return false
 }
-
