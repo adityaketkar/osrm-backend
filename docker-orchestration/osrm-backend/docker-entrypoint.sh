@@ -4,6 +4,7 @@ DATA_PATH=${DATA_PATH:="/osrm-data"}
 OSRM_EXTRA_COMMAND="-l DEBUG"
 OSRM_ROUTED_STARTUP_COMMAND=" -a MLD --max-table-size 8000 "
 MAPDATA_NAME_WITH_SUFFIX=map
+PBF_FILE_SUFFIX=".osm.pbf"
 WAYID2NODEIDS_MAPPING_FILE=wayid2nodeids.csv
 WAYID2NODEIDS_MAPPING_FILE_COMPRESSED=${WAYID2NODEIDS_MAPPING_FILE}.snappy
 
@@ -45,27 +46,36 @@ elif [ "$1" = 'routed_no_traffic_startup' ]; then
 elif [ "$1" = 'compile_mapdata' ]; then
   #trap _sig SIGKILL SIGTERM SIGHUP SIGINT EXIT
 
-  PBF_FILE_URL=${2}
-  IS_TELENAV_PBF=${3:-"false"}
-  DATA_VERSION=${4:-"unset"}
+  PROFILE_LUA=${2} # e.g., "profiles/car.lua"
+  PBF_FILE_URL=${3}
+  PBF_SOURCE=${4:-"osm"}
+  if [ x"${DATA_VERSION}" = x ]; then  # set DATA_VERSION explicitly by env vars. Use the PBF_FILE_URL if not set.
+    DATA_VERSION=${PBF_FILE_URL}
+  fi
 
-  curl -sSL -f ${PBF_FILE_URL} > $DATA_PATH/${MAPDATA_NAME_WITH_SUFFIX}.osm.pbf
-  ${BUILD_PATH}/osrm-extract $DATA_PATH/${MAPDATA_NAME_WITH_SUFFIX}.osm.pbf -p ${BUILD_PATH}/profiles/car.lua -d ${DATA_VERSION} ${OSRM_EXTRA_COMMAND}
+  curl -sSL -f ${PBF_FILE_URL} > $DATA_PATH/${MAPDATA_NAME_WITH_SUFFIX}${PBF_FILE_SUFFIX}
+  ${BUILD_PATH}/osrm-extract $DATA_PATH/${MAPDATA_NAME_WITH_SUFFIX}${PBF_FILE_SUFFIX} -p ${BUILD_PATH}/${PROFILE_LUA} -d ${DATA_VERSION} ${OSRM_EXTRA_COMMAND}
   ${BUILD_PATH}/osrm-partition $DATA_PATH/${MAPDATA_NAME_WITH_SUFFIX}.osrm ${OSRM_EXTRA_COMMAND}
   ${BUILD_PATH}/osrm-customize $DATA_PATH/${MAPDATA_NAME_WITH_SUFFIX}.osrm ${OSRM_EXTRA_COMMAND}
-  ${BUILD_PATH}/wayid2nodeid-extractor -i $DATA_PATH/${MAPDATA_NAME_WITH_SUFFIX}.osm.pbf -o $DATA_PATH/${WAYID2NODEIDS_MAPPING_FILE}  -b=${IS_TELENAV_PBF}
+  if [ "${PBF_SOURCE}" = "unidb" ]; then
+    WAYID2NODEID_EXTRACTOR_EXTRA_COMMAND="-b=true"
+  fi
+  ${BUILD_PATH}/wayid2nodeid-extractor -i $DATA_PATH/${MAPDATA_NAME_WITH_SUFFIX}${PBF_FILE_SUFFIX} -o $DATA_PATH/${WAYID2NODEIDS_MAPPING_FILE} ${WAYID2NODEID_EXTRACTOR_EXTRA_COMMAND}
   ${BUILD_PATH}/snappy -i $DATA_PATH/${WAYID2NODEIDS_MAPPING_FILE} -o $DATA_PATH/${WAYID2NODEIDS_MAPPING_FILE_COMPRESSED}
-  ls -lh $DATA_PATH/
+  ls -lh ${DATA_PATH}/
 
   # clean source pbf and temp files
-  rm -f $DATA_PATH/${MAPDATA_NAME_WITH_SUFFIX}.osm.pbf
-  rm -f $DATA_PATH/${MAPDATA_NAME_WITH_SUFFIX}.osrm
+  rm -f $DATA_PATH/${MAPDATA_NAME_WITH_SUFFIX}${PBF_FILE_SUFFIX}
   rm -f $DATA_PATH/${WAYID2NODEIDS_MAPPING_FILE}
+  if [ "${KEEP_TEMP_OSRM_FILES}" != "true" ]; then # set KEEP_TEMP_OSRM_FILES explicitly by env vars.
+    rm -f $DATA_PATH/${MAPDATA_NAME_WITH_SUFFIX}.osrm
+  fi
+  ls -lh ${DATA_PATH}/
 
   # export compiled mapdata to mounted path for publishing 
-  SAVE_DATA_PACKAGE_PATH=/save-data
-  mv ${DATA_PATH}/* ${SAVE_DATA_PACKAGE_PATH}/
-  chmod 777 ${SAVE_DATA_PACKAGE_PATH}/*
+  COMPILED_DATA_EXPORT_PATH=/compiled-data
+  mv ${DATA_PATH}/* ${COMPILED_DATA_EXPORT_PATH}/
+  chmod 777 ${COMPILED_DATA_EXPORT_PATH}/*
 
 else
   exec "$@"
