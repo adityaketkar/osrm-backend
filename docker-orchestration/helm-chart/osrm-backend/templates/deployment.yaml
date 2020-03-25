@@ -1,9 +1,12 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "osrm-backend.fullname" . }}
+  name: {{ .Release.Name }}
   labels:
     app: {{ .Release.Name }}
+{{- if .Values.labels }}    
+{{ toYaml .Values.labels | indent 4}}
+{{- end }}
 spec:
   replicas: {{ .Values.replicas }}
   selector:
@@ -18,6 +21,9 @@ spec:
     metadata:
       labels:
         app: {{ .Release.Name }}
+{{- if .Values.labels }}         
+{{ toYaml .Values.labels | indent 8}}
+{{- end }}        
     spec:
     {{- if .Values.nodeSelector }}
       nodeSelector:
@@ -29,6 +35,10 @@ spec:
           imagePullPolicy: IfNotPresent
           command: 
           {{- toYaml .Values.osrm.backend.command | nindent 12 }}
+          {{- if .Values.osrm.backend.resources }}   
+          resources:
+{{ toYaml .Values.osrm.backend.resources | indent 12}}
+          {{- end }}        
           volumeMounts:
           - mountPath: {{ .Values.osrm.backend.mountPath }}
             name:  {{ .Values.logsVolume.name }}

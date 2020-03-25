@@ -1,0 +1,9 @@
+
+  
+osrm:
+  backend: 
+    resources:
+      requests:
+        memory: 40Gi
+
+
