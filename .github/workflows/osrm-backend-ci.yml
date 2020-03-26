@@ -1,0 +1,45 @@
+name: osrm-backend CI
+
+on:
+  push:
+    branches: 
+      - 'master'
+      - 'release/**'      
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: 
+      - 'master'
+      - 'release/**'
+    paths:
+    - '**.cmake'
+    - '**.cc'
+    - '**.cpp'
+    - '**.h'
+    - '**.hpp'
+
+jobs:
+
+  ci-linux:
+    name: osrm-backend CI ubuntu
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build_type: ["", "-DCMAKE_BUILD_TYPE=Debug"]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build
+      run: mkdir build && cd build && cmake ../ -DENABLE_MASON=1 ${{ matrix.build_type }} && cmake --build . 
+
+  ci-macosx:
+    name: osrm-backend CI osx
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        build_type: ["", "-DCMAKE_BUILD_TYPE=Debug"]
+    env:
+      CMAKE_BUILD_EXTRA_PARAM: "-- -j"
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build
+      run: mkdir build && cd build && cmake ../ -DENABLE_MASON=1 ${{ matrix.build_type }} && cmake --build . ${{ env.CMAKE_BUILD_EXTRA_PARAM }}
+
