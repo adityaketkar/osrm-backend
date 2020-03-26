@@ -3,17 +3,18 @@ package stationfinder
 import (
 	"github.com/Telenav/osrm-backend/integration/oasis/searchconnector"
 	"github.com/Telenav/osrm-backend/integration/oasis/searchhelper"
+	"github.com/Telenav/osrm-backend/integration/pkg/api/nav"
 	"github.com/Telenav/osrm-backend/integration/pkg/api/search/searchcoordinate"
 )
 
 const lowEnergyLocationCandidateNumber = 20
 
 type lowEnergyLocationStationFinder struct {
-	location *StationCoordinate
+	location *nav.Location
 	bf       *basicFinder
 }
 
-func NewLowEnergyLocationStationFinder(sc *searchconnector.TNSearchConnector, location *StationCoordinate) *lowEnergyLocationStationFinder {
+func NewLowEnergyLocationStationFinder(sc *searchconnector.TNSearchConnector, location *nav.Location) *lowEnergyLocationStationFinder {
 	obj := &lowEnergyLocationStationFinder{
 		location: location,
 		bf:       newBasicFinder(sc),
