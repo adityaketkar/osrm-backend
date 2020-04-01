@@ -31,15 +31,15 @@ func (indexer *S2Indexer) Build(filePath string) *S2Indexer {
 		pointInfo := spatialindexer.PointInfo{
 			ID: elementID2PointID(record.ID),
 			Location: spatialindexer.Location{
-				Latitude:  record.Lat,
-				Longitude: record.Lon,
+				Lat: record.Lat,
+				Lon: record.Lon,
 			},
 		}
 		pointInfos = append(pointInfos, pointInfo)
 
 		indexer.pointID2Location[elementID2PointID(record.ID)] = spatialindexer.Location{
-			Latitude:  record.Lat,
-			Longitude: record.Lon,
+			Lat: record.Lat,
+			Lon: record.Lon,
 		}
 	}
 
@@ -63,6 +63,37 @@ func (indexer *S2Indexer) Dump(folderPath string) {
 	}
 }
 
+// IteratePoints returns PointInfo in channel
+// It implements interface of PointsIterator
+func (indexer *S2Indexer) IteratePoints() <-chan spatialindexer.PointInfo {
+	pointsC := make(chan spatialindexer.PointInfo, len(indexer.pointID2Location))
+	go func() {
+		for pointID, location := range indexer.pointID2Location {
+			pointsC <- spatialindexer.PointInfo{
+				ID:       pointID,
+				Location: location,
+			}
+		}
+		close(pointsC)
+	}()
+
+	return pointsC
+}
+
+func (indexer *S2Indexer) FindNearByPointIDs(center spatialindexer.Location, radius float64, limitCount int) []spatialindexer.PointInfo {
+	if !indexer.isInit() {
+		glog.Warning("S2Indexer is empty, try to Build() with correct input file first.\n")
+		return nil
+	}
+
+	results := queryNearByPoints(indexer, center, radius)
+	if limitCount != spatialindexer.UnlimitedCount && len(results) > limitCount {
+		results = results[:limitCount]
+	}
+
+	return results
+}
+
 func (indexer S2Indexer) getPointLocationByPointID(id spatialindexer.PointID) (spatialindexer.Location, bool) {
 	location, ok := indexer.pointID2Location[id]
 	return location, ok
@@ -71,6 +102,10 @@ func (indexer S2Indexer) getPointLocationByPointID(id spatialindexer.PointID) (s
 func (indexer S2Indexer) getPointIDsByS2CellID(cellid s2.CellID) ([]spatialindexer.PointID, bool) {
 	pointIDs, ok := indexer.cellID2PointIDs[cellid]
 	return pointIDs, ok
+}
+
+func (indexer S2Indexer) isInit() bool {
+	return len(indexer.cellID2PointIDs) != 0 && len(indexer.pointID2Location) != 0
 }
 
 func elementID2PointID(id int64) spatialindexer.PointID {

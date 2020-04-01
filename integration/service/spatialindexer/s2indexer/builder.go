@@ -19,7 +19,7 @@ func build(points []spatialindexer.PointInfo, minLevel, maxLevel int) map[s2.Cel
 	cellID2PointIDs := make(map[s2.CellID][]spatialindexer.PointID)
 
 	for _, p := range points {
-		leafCellID := s2.CellFromLatLng(s2.LatLngFromDegrees(p.Location.Latitude, p.Location.Longitude)).ID()
+		leafCellID := s2.CellFromLatLng(s2.LatLngFromDegrees(p.Location.Lat, p.Location.Lon)).ID()
 
 		var cellIDs []s2.CellID
 		// For level = 30, its parent equal to current

@@ -1,4 +1,4 @@
-// package spatialindexer answers query of nearest points(place, point of interest) for conditions
+// Package spatialindexer answers query of nearest points(place, point of interest) for conditions
 // such as center location, radius, etc
 //
 // Sample Scenario 1: Build connectivity for charge stations during pro-processing

@@ -16,7 +16,7 @@ func queryNearByS2Cells(point spatialindexer.Location, radiusInMeters float64) [
 		MinLevel: minS2Level,
 		MaxLevel: maxS2Level,
 		MaxCells: maxCellCount}
-	center := s2.PointFromLatLng(s2.LatLngFromDegrees(point.Latitude, point.Longitude))
+	center := s2.PointFromLatLng(s2.LatLngFromDegrees(point.Lat, point.Lon))
 	radius := (s1.Angle)(radiusInMeters / s2EarthRadiusInMeters)
 	region := s2.Region(s2.CapFromCenterAngle(center, radius))
 	cellUnion := regionCover.Covering(region)

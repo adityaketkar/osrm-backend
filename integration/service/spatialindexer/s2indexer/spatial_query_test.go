@@ -58,35 +58,35 @@ func TestSpatialIndexQuery1(t *testing.T) {
 		},
 		pointID2Location: map[spatialindexer.PointID]spatialindexer.Location{
 			1: spatialindexer.Location{
-				Latitude:  37.402701,
-				Longitude: -121.974096,
+				Lat: 37.402701,
+				Lon: -121.974096,
 			},
 			2: spatialindexer.Location{
-				Latitude:  37.403530,
-				Longitude: -121.969768,
+				Lat: 37.403530,
+				Lon: -121.969768,
 			},
 		},
 	}
 
 	// center in 4655 great america pkwy
 	center := spatialindexer.Location{
-		Latitude:  37.402799,
-		Longitude: -121.969861,
+		Lat: 37.402799,
+		Lon: -121.969861,
 	}
 
 	expect := []spatialindexer.PointInfo{
 		spatialindexer.PointInfo{
 			ID: 1,
 			Location: spatialindexer.Location{
-				Latitude:  37.402701,
-				Longitude: -121.974096,
+				Lat: 37.402701,
+				Lon: -121.974096,
 			},
 		},
 		spatialindexer.PointInfo{
 			ID: 2,
 			Location: spatialindexer.Location{
-				Latitude:  37.40353,
-				Longitude: -121.969768,
+				Lat: 37.40353,
+				Lon: -121.969768,
 			},
 		},
 	}
@@ -102,8 +102,8 @@ func TestSpatialIndexQuery1(t *testing.T) {
 func TestQueryNearByS2Cells1(t *testing.T) {
 	// center in 4655 great america pkwy
 	center := spatialindexer.Location{
-		Latitude:  37.402799,
-		Longitude: -121.969861,
+		Lat: 37.402799,
+		Lon: -121.969861,
 	}
 	actualCellIDs := queryNearByS2Cells(center, 1600)
 	glog.Infof("\nTest URL is %s\n", generateDebugURL(actualCellIDs))

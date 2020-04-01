@@ -20,16 +20,16 @@ func TestDumper(t *testing.T) {
 			},
 			pointID2Location: map[spatialindexer.PointID]spatialindexer.Location{
 				1: spatialindexer.Location{
-					Latitude:  11.11,
-					Longitude: 11.11,
+					Lat: 11.11,
+					Lon: 11.11,
 				},
 				2: spatialindexer.Location{
-					Latitude:  22.22,
-					Longitude: 22.22,
+					Lat: 22.22,
+					Lon: 22.22,
 				},
 				3: spatialindexer.Location{
-					Latitude:  33.33,
-					Longitude: 33.33,
+					Lat: 33.33,
+					Lon: 33.33,
 				},
 			},
 		},

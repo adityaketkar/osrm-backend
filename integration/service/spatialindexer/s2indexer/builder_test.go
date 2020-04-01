@@ -20,8 +20,8 @@ func TestBuild(t *testing.T) {
 				spatialindexer.PointInfo{
 					ID: 1,
 					Location: spatialindexer.Location{
-						Latitude:  37.402701,
-						Longitude: -121.974096,
+						Lat: 37.402701,
+						Lon: -121.974096,
 					},
 				},
 			},
@@ -59,15 +59,15 @@ func TestBuild(t *testing.T) {
 				spatialindexer.PointInfo{
 					ID: 1,
 					Location: spatialindexer.Location{
-						Latitude:  37.402701,
-						Longitude: -121.974096,
+						Lat: 37.402701,
+						Lon: -121.974096,
 					},
 				},
 				spatialindexer.PointInfo{
 					ID: 2,
 					Location: spatialindexer.Location{
-						Latitude:  37.403530,
-						Longitude: -121.969768,
+						Lat: 37.403530,
+						Lon: -121.969768,
 					},
 				},
 			},
@@ -125,29 +125,29 @@ func TestBuild(t *testing.T) {
 				spatialindexer.PointInfo{
 					ID: 1,
 					Location: spatialindexer.Location{
-						Latitude:  37.651275,
-						Longitude: -122.413744,
+						Lat: 37.651275,
+						Lon: -122.413744,
 					},
 				},
 				spatialindexer.PointInfo{
 					ID: 2,
 					Location: spatialindexer.Location{
-						Latitude:  36.776215,
-						Longitude: -121.733663,
+						Lat: 36.776215,
+						Lon: -121.733663,
 					},
 				},
 				spatialindexer.PointInfo{
 					ID: 3,
 					Location: spatialindexer.Location{
-						Latitude:  36.122438,
-						Longitude: -121.022936,
+						Lat: 36.122438,
+						Lon: -121.022936,
 					},
 				},
 				spatialindexer.PointInfo{
 					ID: 4,
 					Location: spatialindexer.Location{
-						Latitude:  35.365543,
-						Longitude: -120.850000,
+						Lat: 35.365543,
+						Lon: -120.850000,
 					},
 				},
 			},
