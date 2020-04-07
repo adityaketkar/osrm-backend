@@ -32,7 +32,7 @@ const UnlimitedCount = math.MaxInt32
 type Finder interface {
 
 	// FindNearByPointIDs returns a group of points near to given center location
-	FindNearByPointIDs(center Location, radius float64, limitCount int) []PointInfo
+	FindNearByPointIDs(center Location, radius float64, limitCount int) []*PointInfo
 }
 
 // Ranker used to ranking a group of points

@@ -24,8 +24,8 @@ func queryNearByS2Cells(point spatialindexer.Location, radiusInMeters float64) [
 	return ([]s2.CellID)(cellUnion)
 }
 
-func queryNearByPoints(indexer *S2Indexer, point spatialindexer.Location, radius float64) []spatialindexer.PointInfo {
-	var result []spatialindexer.PointInfo
+func queryNearByPoints(indexer *S2Indexer, point spatialindexer.Location, radius float64) []*spatialindexer.PointInfo {
+	var result []*spatialindexer.PointInfo
 
 	cellIDs := queryNearByS2Cells(point, radius)
 
@@ -42,7 +42,7 @@ func queryNearByPoints(indexer *S2Indexer, point spatialindexer.Location, radius
 				continue
 			}
 
-			result = append(result, spatialindexer.PointInfo{
+			result = append(result, &spatialindexer.PointInfo{
 				ID:       pointID,
 				Location: location,
 			})

@@ -74,15 +74,15 @@ func TestSpatialIndexQuery1(t *testing.T) {
 		Lon: -121.969861,
 	}
 
-	expect := []spatialindexer.PointInfo{
-		spatialindexer.PointInfo{
+	expect := []*spatialindexer.PointInfo{
+		&spatialindexer.PointInfo{
 			ID: 1,
 			Location: spatialindexer.Location{
 				Lat: 37.402701,
 				Lon: -121.974096,
 			},
 		},
-		spatialindexer.PointInfo{
+		&spatialindexer.PointInfo{
 			ID: 2,
 			Location: spatialindexer.Location{
 				Lat: 37.40353,

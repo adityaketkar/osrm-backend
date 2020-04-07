@@ -6,10 +6,13 @@ import (
 )
 
 const (
-	SimpleRanker    = "SimpleRanker"
+	// SimpleRanker implements Raner's interface based on great circle distance
+	SimpleRanker = "SimpleRanker"
+	// OSRMBasedRanker implements Raner's interface based on OSRM
 	OSRMBasedRanker = "OSRMBasedRanker"
 )
 
+// CreateRanker creates implementations of interface Ranker
 func CreateRanker(rankerType string, oc *osrmconnector.OSRMConnector) spatialindexer.Ranker {
 	switch rankerType {
 	case SimpleRanker:

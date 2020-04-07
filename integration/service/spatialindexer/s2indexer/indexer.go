@@ -80,8 +80,9 @@ func (indexer *S2Indexer) IteratePoints() <-chan spatialindexer.PointInfo {
 	return pointsC
 }
 
-func (indexer *S2Indexer) FindNearByPointIDs(center spatialindexer.Location, radius float64, limitCount int) []spatialindexer.PointInfo {
-	if !indexer.isInit() {
+// FindNearByPointIDs returns nearby points for given center and conditions
+func (indexer *S2Indexer) FindNearByPointIDs(center spatialindexer.Location, radius float64, limitCount int) []*spatialindexer.PointInfo {
+	if !indexer.isInitialized() {
 		glog.Warning("S2Indexer is empty, try to Build() with correct input file first.\n")
 		return nil
 	}
@@ -104,7 +105,7 @@ func (indexer S2Indexer) getPointIDsByS2CellID(cellid s2.CellID) ([]spatialindex
 	return pointIDs, ok
 }
 
-func (indexer S2Indexer) isInit() bool {
+func (indexer S2Indexer) isInitialized() bool {
 	return len(indexer.cellID2PointIDs) != 0 && len(indexer.pointID2Location) != 0
 }
 
