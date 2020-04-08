@@ -68,7 +68,7 @@ func (builder *connectivityMapBuilder) process() {
 		go builder.work(i, inputC, builder.aggregatorC)
 	}
 
-	glog.Infof("builder start number of %d workers.\n", builder.numOfWorker)
+	glog.Infof("builder's process is finished, start number of %d workers.\n", builder.numOfWorker)
 }
 
 func (builder *connectivityMapBuilder) work(workerID int, source <-chan spatialindexer.PointInfo, sink chan<- placeIDWithNearByPlaceIDs) {
@@ -78,7 +78,7 @@ func (builder *connectivityMapBuilder) work(workerID int, source <-chan spatiali
 	for p := range source {
 		counter += 1
 		nearbyIDs := builder.finder.FindNearByPointIDs(p.Location, builder.distanceLimit, spatialindexer.UnlimitedCount)
-		rankedResults := builder.ranker.RankPointIDsByGreatCircleDistance(p.Location, nearbyIDs)
+		rankedResults := builder.ranker.RankPointIDsByShortestDistance(p.Location, nearbyIDs)
 
 		ids := make([]IDAndDistance, 0, len(rankedResults))
 		for _, r := range rankedResults {
