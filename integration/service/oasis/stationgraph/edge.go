@@ -5,12 +5,12 @@ type edgeID struct {
 	toNodeID   nodeID
 }
 
-type edge struct {
+type edgeMetric struct {
 	distance float64
 	duration float64
 }
 
-type edgeIDAndData struct {
-	edgeId   edgeID
-	edgeData *edge
+type edge struct {
+	edgeId     edgeID
+	edgeMetric *edgeMetric
 }

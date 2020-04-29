@@ -1,6 +1,9 @@
 package stationgraph
 
-import "github.com/Telenav/osrm-backend/integration/service/oasis/chargingstrategy"
+import (
+	"github.com/Telenav/osrm-backend/integration/pkg/api/nav"
+	"github.com/Telenav/osrm-backend/integration/service/oasis/chargingstrategy"
+)
 
 type logicNodeIdentifier2NodePtr map[logicNodeIdentifier]*node
 type nodeID2NodePtr map[nodeID]*node
@@ -22,20 +25,22 @@ func newNodeContainer() *nodeContainer {
 	}
 }
 
-func (nc *nodeContainer) addNode(stationID string, targetState chargingstrategy.State, location locationInfo) *node {
+func (nc *nodeContainer) addNode(stationID string, targetState chargingstrategy.State, location nav.Location) *node {
 	key := logicNodeIdentifier{stationID, targetState}
 
 	if n, ok := nc.logicNode2NodePtr[key]; ok {
 		return n
 	} else {
 		n = &node{
-			id: (nodeID(nc.counter)),
-			chargeInfo: chargeInfo{
+			(nodeID(nc.counter)),
+			chargeInfo{
 				arrivalEnergy: 0.0,
 				chargeTime:    0.0,
 				targetState:   targetState,
 			},
-			locationInfo: location,
+			nav.Location{
+				Lat: location.Lat,
+				Lon: location.Lon},
 		}
 		nc.logicNode2NodePtr[key] = n
 		nc.id2NodePtr[n.id] = n
@@ -49,10 +54,9 @@ func (nc *nodeContainer) addNode(stationID string, targetState chargingstrategy.
 func (nc *nodeContainer) getNode(id nodeID) *node {
 	if n, ok := nc.id2NodePtr[id]; ok {
 		return n
-	} else {
-		return nil
 	}
 
+	return nil
 }
 
 func (nc *nodeContainer) isNodeVisited(id nodeID) bool {

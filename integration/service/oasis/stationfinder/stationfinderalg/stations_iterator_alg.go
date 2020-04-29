@@ -32,7 +32,7 @@ func FindOverlapBetweenStations(iterF stationfindertype.NearbyStationsIterator, 
 
 // CalcWeightBetweenChargeStationsPair accepts two iterators and calculates weights between each pair of iterators
 func CalcWeightBetweenChargeStationsPair(from stationfindertype.NearbyStationsIterator, to stationfindertype.NearbyStationsIterator, table osrmconnector.TableRequster) ([]stationfindertype.NeighborInfo, error) {
-	// collect (lat,lon)&ID for current location's nearby charge stations
+	// collect (Lat,Lon)&ID for current location's nearby charge stations
 	var startPoints coordinate.Coordinates
 	var startIDs []string
 	for v := range from.IterateNearbyStations() {
@@ -48,7 +48,7 @@ func CalcWeightBetweenChargeStationsPair(from stationfindertype.NearbyStationsIt
 		return nil, err
 	}
 
-	// collect (lat,lon)&ID for target location's nearby charge stations
+	// collect (Lat,Lon)&ID for target location's nearby charge stations
 	var targetPoints coordinate.Coordinates
 	var targetIDs []string
 	for v := range to.IterateNearbyStations() {

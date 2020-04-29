@@ -264,9 +264,9 @@ var mockedGraph4StationGraph = mockGraph{
 					Energy: 20.0,
 				},
 			},
-			locationInfo{
-				lat: 0.0,
-				lon: 0.0,
+			nav.Location{
+				Lat: 0.0,
+				Lon: 0.0,
 			},
 		},
 		// stationfindertype.DestLocationID,
@@ -275,9 +275,9 @@ var mockedGraph4StationGraph = mockGraph{
 			chargeInfo{
 				targetState: chargingstrategy.State{},
 			},
-			locationInfo{
-				lat: 6.6,
-				lon: 6.6,
+			nav.Location{
+				Lat: 6.6,
+				Lon: 6.6,
 			},
 		},
 		// station 1
@@ -288,9 +288,9 @@ var mockedGraph4StationGraph = mockGraph{
 					Energy: 30.0,
 				},
 			},
-			locationInfo{
-				lat: 1.1,
-				lon: 1.1,
+			nav.Location{
+				Lat: 1.1,
+				Lon: 1.1,
 			},
 		},
 		// station 1
@@ -301,9 +301,9 @@ var mockedGraph4StationGraph = mockGraph{
 					Energy: 40.0,
 				},
 			},
-			locationInfo{
-				lat: 1.1,
-				lon: 1.1,
+			nav.Location{
+				Lat: 1.1,
+				Lon: 1.1,
 			},
 		},
 		// station 1
@@ -314,9 +314,9 @@ var mockedGraph4StationGraph = mockGraph{
 					Energy: 50.0,
 				},
 			},
-			locationInfo{
-				lat: 1.1,
-				lon: 1.1,
+			nav.Location{
+				Lat: 1.1,
+				Lon: 1.1,
 			},
 		},
 		// station 2
@@ -327,9 +327,9 @@ var mockedGraph4StationGraph = mockGraph{
 					Energy: 30.0,
 				},
 			},
-			locationInfo{
-				lat: 2.2,
-				lon: 2.2,
+			nav.Location{
+				Lat: 2.2,
+				Lon: 2.2,
 			},
 		},
 		// station 2
@@ -340,9 +340,9 @@ var mockedGraph4StationGraph = mockGraph{
 					Energy: 40.0,
 				},
 			},
-			locationInfo{
-				lat: 2.2,
-				lon: 2.2,
+			nav.Location{
+				Lat: 2.2,
+				Lon: 2.2,
 			},
 		},
 		// station 2
@@ -353,9 +353,9 @@ var mockedGraph4StationGraph = mockGraph{
 					Energy: 50.0,
 				},
 			},
-			locationInfo{
-				lat: 2.2,
-				lon: 2.2,
+			nav.Location{
+				Lat: 2.2,
+				Lon: 2.2,
 			},
 		},
 		// station 3
@@ -366,9 +366,9 @@ var mockedGraph4StationGraph = mockGraph{
 					Energy: 30.0,
 				},
 			},
-			locationInfo{
-				lat: 3.3,
-				lon: 3.3,
+			nav.Location{
+				Lat: 3.3,
+				Lon: 3.3,
 			},
 		},
 		// station 3
@@ -379,9 +379,9 @@ var mockedGraph4StationGraph = mockGraph{
 					Energy: 40.0,
 				},
 			},
-			locationInfo{
-				lat: 3.3,
-				lon: 3.3,
+			nav.Location{
+				Lat: 3.3,
+				Lon: 3.3,
 			},
 		},
 		// station 3
@@ -392,9 +392,9 @@ var mockedGraph4StationGraph = mockGraph{
 					Energy: 50.0,
 				},
 			},
-			locationInfo{
-				lat: 3.3,
-				lon: 3.3,
+			nav.Location{
+				Lat: 3.3,
+				Lon: 3.3,
 			},
 		},
 		// station 4
@@ -405,9 +405,9 @@ var mockedGraph4StationGraph = mockGraph{
 					Energy: 30.0,
 				},
 			},
-			locationInfo{
-				lat: 4.4,
-				lon: 4.4,
+			nav.Location{
+				Lat: 4.4,
+				Lon: 4.4,
 			},
 		},
 		// station 4
@@ -418,9 +418,9 @@ var mockedGraph4StationGraph = mockGraph{
 					Energy: 40.0,
 				},
 			},
-			locationInfo{
-				lat: 4.4,
-				lon: 4.4,
+			nav.Location{
+				Lat: 4.4,
+				Lon: 4.4,
 			},
 		},
 		// station 4
@@ -431,9 +431,9 @@ var mockedGraph4StationGraph = mockGraph{
 					Energy: 50.0,
 				},
 			},
-			locationInfo{
-				lat: 4.4,
-				lon: 4.4,
+			nav.Location{
+				Lat: 4.4,
+				Lon: 4.4,
 			},
 		},
 		// station 5
@@ -444,9 +444,9 @@ var mockedGraph4StationGraph = mockGraph{
 					Energy: 30.0,
 				},
 			},
-			locationInfo{
-				lat: 5.5,
-				lon: 5.5,
+			nav.Location{
+				Lat: 5.5,
+				Lon: 5.5,
 			},
 		},
 		// station 5
@@ -457,9 +457,9 @@ var mockedGraph4StationGraph = mockGraph{
 					Energy: 40.0,
 				},
 			},
-			locationInfo{
-				lat: 5.5,
-				lon: 5.5,
+			nav.Location{
+				Lat: 5.5,
+				Lon: 5.5,
 			},
 		},
 		// station 5
@@ -470,9 +470,9 @@ var mockedGraph4StationGraph = mockGraph{
 					Energy: 50.0,
 				},
 			},
-			locationInfo{
-				lat: 5.5,
-				lon: 5.5,
+			nav.Location{
+				Lat: 5.5,
+				Lon: 5.5,
 			},
 		},
 	},
@@ -495,146 +495,146 @@ var mockedGraph4StationGraph = mockGraph{
 		"station5",
 		"station5",
 	},
-	map[nodeID][]*edgeIDAndData{
+	map[nodeID][]*edge{
 		0: {
 			// orig -> station 1
-			{edgeID{0, 2}, &edge{22.2, 22.2}},
-			{edgeID{0, 3}, &edge{22.2, 22.2}},
-			{edgeID{0, 4}, &edge{22.2, 22.2}},
+			{edgeID{0, 2}, &edgeMetric{22.2, 22.2}},
+			{edgeID{0, 3}, &edgeMetric{22.2, 22.2}},
+			{edgeID{0, 4}, &edgeMetric{22.2, 22.2}},
 			// orig -> station 2
-			{edgeID{0, 5}, &edge{11.1, 11.1}},
-			{edgeID{0, 6}, &edge{11.1, 11.1}},
-			{edgeID{0, 7}, &edge{11.1, 11.1}},
+			{edgeID{0, 5}, &edgeMetric{11.1, 11.1}},
+			{edgeID{0, 6}, &edgeMetric{11.1, 11.1}},
+			{edgeID{0, 7}, &edgeMetric{11.1, 11.1}},
 			// orig -> station 3
-			{edgeID{0, 8}, &edge{33.3, 33.3}},
-			{edgeID{0, 9}, &edge{33.3, 33.3}},
-			{edgeID{0, 10}, &edge{33.3, 33.3}},
+			{edgeID{0, 8}, &edgeMetric{33.3, 33.3}},
+			{edgeID{0, 9}, &edgeMetric{33.3, 33.3}},
+			{edgeID{0, 10}, &edgeMetric{33.3, 33.3}},
 		},
 		2: {
 			// station 1 -> station 4
-			{edgeID{2, 11}, &edge{44.4, 44.4}},
-			{edgeID{2, 12}, &edge{44.4, 44.4}},
-			{edgeID{2, 13}, &edge{44.4, 44.4}},
+			{edgeID{2, 11}, &edgeMetric{44.4, 44.4}},
+			{edgeID{2, 12}, &edgeMetric{44.4, 44.4}},
+			{edgeID{2, 13}, &edgeMetric{44.4, 44.4}},
 			// station 1 -> station 5
-			{edgeID{2, 14}, &edge{34.4, 34.4}},
-			{edgeID{2, 15}, &edge{34.4, 34.4}},
-			{edgeID{2, 16}, &edge{34.4, 34.4}},
+			{edgeID{2, 14}, &edgeMetric{34.4, 34.4}},
+			{edgeID{2, 15}, &edgeMetric{34.4, 34.4}},
+			{edgeID{2, 16}, &edgeMetric{34.4, 34.4}},
 		},
 		3: {
 			// station 1 -> station 4
-			{edgeID{3, 11}, &edge{44.4, 44.4}},
-			{edgeID{3, 12}, &edge{44.4, 44.4}},
-			{edgeID{3, 13}, &edge{44.4, 44.4}},
+			{edgeID{3, 11}, &edgeMetric{44.4, 44.4}},
+			{edgeID{3, 12}, &edgeMetric{44.4, 44.4}},
+			{edgeID{3, 13}, &edgeMetric{44.4, 44.4}},
 			// station 1 -> station 5
-			{edgeID{3, 14}, &edge{34.4, 34.4}},
-			{edgeID{3, 15}, &edge{34.4, 34.4}},
-			{edgeID{3, 16}, &edge{34.4, 34.4}},
+			{edgeID{3, 14}, &edgeMetric{34.4, 34.4}},
+			{edgeID{3, 15}, &edgeMetric{34.4, 34.4}},
+			{edgeID{3, 16}, &edgeMetric{34.4, 34.4}},
 		},
 		4: {
 			// station 1 -> station 4
-			{edgeID{4, 11}, &edge{44.4, 44.4}},
-			{edgeID{4, 12}, &edge{44.4, 44.4}},
-			{edgeID{4, 13}, &edge{44.4, 44.4}},
+			{edgeID{4, 11}, &edgeMetric{44.4, 44.4}},
+			{edgeID{4, 12}, &edgeMetric{44.4, 44.4}},
+			{edgeID{4, 13}, &edgeMetric{44.4, 44.4}},
 			// station 1 -> station 5
-			{edgeID{4, 14}, &edge{34.4, 34.4}},
-			{edgeID{4, 15}, &edge{34.4, 34.4}},
-			{edgeID{4, 16}, &edge{34.4, 34.4}},
+			{edgeID{4, 14}, &edgeMetric{34.4, 34.4}},
+			{edgeID{4, 15}, &edgeMetric{34.4, 34.4}},
+			{edgeID{4, 16}, &edgeMetric{34.4, 34.4}},
 		},
 		5: {
 			// station 2 -> station 4
-			{edgeID{5, 11}, &edge{11.1, 11.1}},
-			{edgeID{5, 12}, &edge{11.1, 11.1}},
-			{edgeID{5, 13}, &edge{11.1, 11.1}},
+			{edgeID{5, 11}, &edgeMetric{11.1, 11.1}},
+			{edgeID{5, 12}, &edgeMetric{11.1, 11.1}},
+			{edgeID{5, 13}, &edgeMetric{11.1, 11.1}},
 			// station 2 -> station 5
-			{edgeID{5, 14}, &edge{14.4, 14.4}},
-			{edgeID{5, 15}, &edge{14.4, 14.4}},
-			{edgeID{5, 16}, &edge{14.4, 14.4}},
+			{edgeID{5, 14}, &edgeMetric{14.4, 14.4}},
+			{edgeID{5, 15}, &edgeMetric{14.4, 14.4}},
+			{edgeID{5, 16}, &edgeMetric{14.4, 14.4}},
 		},
 		6: {
 			// station 2 -> station 4
-			{edgeID{6, 11}, &edge{11.1, 11.1}},
-			{edgeID{6, 12}, &edge{11.1, 11.1}},
-			{edgeID{6, 13}, &edge{11.1, 11.1}},
+			{edgeID{6, 11}, &edgeMetric{11.1, 11.1}},
+			{edgeID{6, 12}, &edgeMetric{11.1, 11.1}},
+			{edgeID{6, 13}, &edgeMetric{11.1, 11.1}},
 			// station 2 -> station 5
-			{edgeID{6, 14}, &edge{14.4, 14.4}},
-			{edgeID{6, 15}, &edge{14.4, 14.4}},
-			{edgeID{6, 16}, &edge{14.4, 14.4}},
+			{edgeID{6, 14}, &edgeMetric{14.4, 14.4}},
+			{edgeID{6, 15}, &edgeMetric{14.4, 14.4}},
+			{edgeID{6, 16}, &edgeMetric{14.4, 14.4}},
 		},
 		7: {
 			// station 2 -> station 4
-			{edgeID{7, 11}, &edge{11.1, 11.1}},
-			{edgeID{7, 12}, &edge{11.1, 11.1}},
-			{edgeID{7, 13}, &edge{11.1, 11.1}},
+			{edgeID{7, 11}, &edgeMetric{11.1, 11.1}},
+			{edgeID{7, 12}, &edgeMetric{11.1, 11.1}},
+			{edgeID{7, 13}, &edgeMetric{11.1, 11.1}},
 			// station 2 -> station 5
-			{edgeID{7, 14}, &edge{14.4, 14.4}},
-			{edgeID{7, 15}, &edge{14.4, 14.4}},
-			{edgeID{7, 16}, &edge{14.4, 14.4}},
+			{edgeID{7, 14}, &edgeMetric{14.4, 14.4}},
+			{edgeID{7, 15}, &edgeMetric{14.4, 14.4}},
+			{edgeID{7, 16}, &edgeMetric{14.4, 14.4}},
 		},
 		8: {
 			// station 3 -> station 4
-			{edgeID{8, 11}, &edge{22.2, 22.2}},
-			{edgeID{8, 12}, &edge{22.2, 22.2}},
-			{edgeID{8, 13}, &edge{22.2, 22.2}},
+			{edgeID{8, 11}, &edgeMetric{22.2, 22.2}},
+			{edgeID{8, 12}, &edgeMetric{22.2, 22.2}},
+			{edgeID{8, 13}, &edgeMetric{22.2, 22.2}},
 			// station 3 -> station 5
-			{edgeID{8, 14}, &edge{15.5, 15.5}},
-			{edgeID{8, 15}, &edge{15.5, 15.5}},
-			{edgeID{8, 16}, &edge{15.5, 15.5}},
+			{edgeID{8, 14}, &edgeMetric{15.5, 15.5}},
+			{edgeID{8, 15}, &edgeMetric{15.5, 15.5}},
+			{edgeID{8, 16}, &edgeMetric{15.5, 15.5}},
 		},
 		9: {
 			// station 3 -> station 4
-			{edgeID{9, 11}, &edge{22.2, 22.2}},
-			{edgeID{9, 12}, &edge{22.2, 22.2}},
-			{edgeID{9, 13}, &edge{22.2, 22.2}},
+			{edgeID{9, 11}, &edgeMetric{22.2, 22.2}},
+			{edgeID{9, 12}, &edgeMetric{22.2, 22.2}},
+			{edgeID{9, 13}, &edgeMetric{22.2, 22.2}},
 			// station 3 -> station 5
-			{edgeID{9, 14}, &edge{15.5, 15.5}},
-			{edgeID{9, 15}, &edge{15.5, 15.5}},
-			{edgeID{9, 16}, &edge{15.5, 15.5}},
+			{edgeID{9, 14}, &edgeMetric{15.5, 15.5}},
+			{edgeID{9, 15}, &edgeMetric{15.5, 15.5}},
+			{edgeID{9, 16}, &edgeMetric{15.5, 15.5}},
 		},
 		10: {
 			// station 3 -> station 4
-			{edgeID{10, 11}, &edge{22.2, 22.2}},
-			{edgeID{10, 12}, &edge{22.2, 22.2}},
-			{edgeID{10, 13}, &edge{22.2, 22.2}},
+			{edgeID{10, 11}, &edgeMetric{22.2, 22.2}},
+			{edgeID{10, 12}, &edgeMetric{22.2, 22.2}},
+			{edgeID{10, 13}, &edgeMetric{22.2, 22.2}},
 			// station 3 -> station 5
-			{edgeID{10, 14}, &edge{15.5, 15.5}},
-			{edgeID{10, 15}, &edge{15.5, 15.5}},
-			{edgeID{10, 16}, &edge{15.5, 15.5}},
+			{edgeID{10, 14}, &edgeMetric{15.5, 15.5}},
+			{edgeID{10, 15}, &edgeMetric{15.5, 15.5}},
+			{edgeID{10, 16}, &edgeMetric{15.5, 15.5}},
 		},
 		11: {
 			// station 4 -> end
-			{edgeID{11, 1}, &edge{44.4, 44.4}},
-			{edgeID{11, 1}, &edge{44.4, 44.4}},
-			{edgeID{11, 1}, &edge{44.4, 44.4}},
+			{edgeID{11, 1}, &edgeMetric{44.4, 44.4}},
+			{edgeID{11, 1}, &edgeMetric{44.4, 44.4}},
+			{edgeID{11, 1}, &edgeMetric{44.4, 44.4}},
 		},
 		12: {
 			// station 4 -> end
-			{edgeID{12, 1}, &edge{44.4, 44.4}},
-			{edgeID{12, 1}, &edge{44.4, 44.4}},
-			{edgeID{12, 1}, &edge{44.4, 44.4}},
+			{edgeID{12, 1}, &edgeMetric{44.4, 44.4}},
+			{edgeID{12, 1}, &edgeMetric{44.4, 44.4}},
+			{edgeID{12, 1}, &edgeMetric{44.4, 44.4}},
 		},
 		13: {
 			// station 4 -> end
-			{edgeID{13, 1}, &edge{44.4, 44.4}},
-			{edgeID{13, 1}, &edge{44.4, 44.4}},
-			{edgeID{13, 1}, &edge{44.4, 44.4}},
+			{edgeID{13, 1}, &edgeMetric{44.4, 44.4}},
+			{edgeID{13, 1}, &edgeMetric{44.4, 44.4}},
+			{edgeID{13, 1}, &edgeMetric{44.4, 44.4}},
 		},
 		14: {
 			// station 5 -> end
-			{edgeID{14, 1}, &edge{33.3, 33.3}},
-			{edgeID{14, 1}, &edge{33.3, 33.3}},
-			{edgeID{14, 1}, &edge{33.3, 33.3}},
+			{edgeID{14, 1}, &edgeMetric{33.3, 33.3}},
+			{edgeID{14, 1}, &edgeMetric{33.3, 33.3}},
+			{edgeID{14, 1}, &edgeMetric{33.3, 33.3}},
 		},
 		15: {
 			// station 5 -> end
-			{edgeID{15, 1}, &edge{33.3, 33.3}},
-			{edgeID{15, 1}, &edge{33.3, 33.3}},
-			{edgeID{15, 1}, &edge{33.3, 33.3}},
+			{edgeID{15, 1}, &edgeMetric{33.3, 33.3}},
+			{edgeID{15, 1}, &edgeMetric{33.3, 33.3}},
+			{edgeID{15, 1}, &edgeMetric{33.3, 33.3}},
 		},
 		16: {
 			// station 5 -> end
-			{edgeID{16, 1}, &edge{33.3, 33.3}},
-			{edgeID{16, 1}, &edge{33.3, 33.3}},
-			{edgeID{16, 1}, &edge{33.3, 33.3}},
+			{edgeID{16, 1}, &edgeMetric{33.3, 33.3}},
+			{edgeID{16, 1}, &edgeMetric{33.3, 33.3}},
+			{edgeID{16, 1}, &edgeMetric{33.3, 33.3}},
 		},
 	},
 	chargingstrategy.NewFakeChargingStrategy(50.0),

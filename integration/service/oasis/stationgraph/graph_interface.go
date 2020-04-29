@@ -1,10 +1,13 @@
 package stationgraph
 
-import "github.com/Telenav/osrm-backend/integration/service/oasis/chargingstrategy"
+import (
+	"github.com/Telenav/osrm-backend/integration/pkg/api/nav"
+	"github.com/Telenav/osrm-backend/integration/service/oasis/chargingstrategy"
+)
 
 // Graph defines interface used for Graph
 type Graph interface {
-	
+
 	// Node returns node object by its nodeID
 	Node(id nodeID) *node
 
@@ -13,13 +16,13 @@ type Graph interface {
 	AdjacentNodes(id nodeID) []nodeID
 
 	// Edge returns edge information between given two nodes
-	Edge(from, to nodeID) *edge
+	Edge(from, to nodeID) *edgeMetric
 
 	// SetStart generates start node for the graph
-	SetStart(stationID string, targetState chargingstrategy.State, location locationInfo) Graph
+	SetStart(stationID string, targetState chargingstrategy.State, location nav.Location) Graph
 
 	// SetEnd generates end node for the graph
-	SetEnd(stationID string, targetState chargingstrategy.State, location locationInfo) Graph
+	SetEnd(stationID string, targetState chargingstrategy.State, location nav.Location) Graph
 
 	// StartNodeID returns start node's ID for given graph
 	StartNodeID() nodeID

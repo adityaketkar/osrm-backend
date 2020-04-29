@@ -45,15 +45,15 @@ func (sg *stationGraph) setStartAndEndForGraph(currEnergyLevel, maxEnergyLevel f
 		chargingstrategy.State{
 			Energy: currEnergyLevel,
 		},
-		locationInfo{
-			startLocation.Lat,
-			startLocation.Lon})
+		nav.Location{
+			Lat: startLocation.Lat,
+			Lon: startLocation.Lon})
 
 	sg.g = sg.g.SetEnd(stationfindertype.DestLocationID,
 		chargingstrategy.State{},
-		locationInfo{
-			endLocation.Lat,
-			endLocation.Lon})
+		nav.Location{
+			Lat: endLocation.Lat,
+			Lon: endLocation.Lon})
 
 	return true
 }
@@ -95,8 +95,8 @@ func (sg *stationGraph) generateSolutionsBasedOnStationCandidates(stationNodes [
 		station.ChargeRange = getChargeInfo(sg.g, stationNodes[i]).targetState.Energy
 		station.ChargeTime = getChargeInfo(sg.g, stationNodes[i]).chargeTime
 		station.Location = nav.Location{
-			Lat: getLocationInfo(sg.g, stationNodes[i]).lat,
-			Lon: getLocationInfo(sg.g, stationNodes[i]).lon,
+			Lat: getLocationInfo(sg.g, stationNodes[i]).Lat,
+			Lon: getLocationInfo(sg.g, stationNodes[i]).Lon,
 		}
 		station.StationID = sg.g.StationID(stationNodes[i])
 
@@ -148,12 +148,14 @@ func getChargeInfo(g Graph, n nodeID) chargeInfo {
 	return g.Node(n).chargeInfo
 }
 
-func getLocationInfo(g Graph, n nodeID) locationInfo {
+func getLocationInfo(g Graph, n nodeID) nav.Location {
 	if g.Node(n) == nil {
 		glog.Fatalf("While calling getLocationInfo, incorrect nodeID passed into graph %v\n", n)
 	}
 
-	return g.Node(n).locationInfo
+	return nav.Location{
+		Lat: g.Node(n).Lat,
+		Lon: g.Node(n).Lon}
 }
 
 func (sg *stationGraph) isStart(id string) bool {

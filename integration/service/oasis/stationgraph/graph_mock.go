@@ -1,6 +1,9 @@
 package stationgraph
 
-import "github.com/Telenav/osrm-backend/integration/service/oasis/chargingstrategy"
+import (
+	"github.com/Telenav/osrm-backend/integration/pkg/api/nav"
+	"github.com/Telenav/osrm-backend/integration/service/oasis/chargingstrategy"
+)
 
 // node_0 -> node_1, duration = 30, distance = 30
 // node_0 -> node_2, duration = 20, distance = 20
@@ -19,9 +22,9 @@ func NewMockGraph1() Graph {
 						Energy: 999,
 					},
 				},
-				locationInfo{
-					lat: 0.0,
-					lon: 0.0,
+				nav.Location{
+					Lat: 0.0,
+					Lon: 0.0,
 				},
 			},
 			{
@@ -31,9 +34,9 @@ func NewMockGraph1() Graph {
 						Energy: 999,
 					},
 				},
-				locationInfo{
-					lat: 1.1,
-					lon: 1.1,
+				nav.Location{
+					Lat: 1.1,
+					Lon: 1.1,
 				},
 			},
 			{
@@ -43,9 +46,9 @@ func NewMockGraph1() Graph {
 						Energy: 999,
 					},
 				},
-				locationInfo{
-					lat: 2.2,
-					lon: 2.2,
+				nav.Location{
+					Lat: 2.2,
+					Lon: 2.2,
 				},
 			},
 			{
@@ -55,9 +58,9 @@ func NewMockGraph1() Graph {
 						Energy: 999,
 					},
 				},
-				locationInfo{
-					lat: 3.3,
-					lon: 3.3,
+				nav.Location{
+					Lat: 3.3,
+					Lon: 3.3,
 				},
 			},
 			{
@@ -67,9 +70,9 @@ func NewMockGraph1() Graph {
 						Energy: 999,
 					},
 				},
-				locationInfo{
-					lat: 4.4,
-					lon: 4.4,
+				nav.Location{
+					Lat: 4.4,
+					Lon: 4.4,
 				},
 			},
 		},
@@ -80,26 +83,26 @@ func NewMockGraph1() Graph {
 			"node_3",
 			"node_4",
 		},
-		map[nodeID][]*edgeIDAndData{
+		map[nodeID][]*edge{
 			// node_0 -> node_1, duration = 30, distance = 30
 			// node_0 -> node_2, duration = 20, distance = 20
 			0: {
-				{edgeID{0, 1}, &edge{30, 30}},
-				{edgeID{0, 2}, &edge{20, 20}},
+				{edgeID{0, 1}, &edgeMetric{30, 30}},
+				{edgeID{0, 2}, &edgeMetric{20, 20}},
 			},
 			// node_1 -> node_3, duration = 10, distance = 10
 			1: {
-				{edgeID{1, 3}, &edge{10, 10}},
+				{edgeID{1, 3}, &edgeMetric{10, 10}},
 			},
 			// node_2 -> node_4, duration = 50, distance = 50
 			// node_2 -> node_3, duration = 50, distance = 50
 			2: {
-				{edgeID{2, 4}, &edge{50, 50}},
-				{edgeID{2, 3}, &edge{50, 50}},
+				{edgeID{2, 4}, &edgeMetric{50, 50}},
+				{edgeID{2, 3}, &edgeMetric{50, 50}},
 			},
 			// node_3 -> node_4, duration = 10, distance = 10
 			3: {
-				{edgeID{3, 4}, &edge{10, 10}},
+				{edgeID{3, 4}, &edgeMetric{10, 10}},
 			},
 		},
 		chargingstrategy.NewNullChargeStrategy(),
@@ -132,9 +135,9 @@ func NewMockGraph2() Graph {
 						Energy: 999,
 					},
 				},
-				locationInfo{
-					lat: 0.0,
-					lon: 0.0,
+				nav.Location{
+					Lat: 0.0,
+					Lon: 0.0,
 				},
 			},
 			{
@@ -144,9 +147,9 @@ func NewMockGraph2() Graph {
 						Energy: 999,
 					},
 				},
-				locationInfo{
-					lat: 1.1,
-					lon: 1.1,
+				nav.Location{
+					Lat: 1.1,
+					Lon: 1.1,
 				},
 			},
 			{
@@ -156,9 +159,9 @@ func NewMockGraph2() Graph {
 						Energy: 999,
 					},
 				},
-				locationInfo{
-					lat: 2.2,
-					lon: 2.2,
+				nav.Location{
+					Lat: 2.2,
+					Lon: 2.2,
 				},
 			},
 			{
@@ -168,9 +171,9 @@ func NewMockGraph2() Graph {
 						Energy: 999,
 					},
 				},
-				locationInfo{
-					lat: 3.3,
-					lon: 3.3,
+				nav.Location{
+					Lat: 3.3,
+					Lon: 3.3,
 				},
 			},
 			{
@@ -180,9 +183,9 @@ func NewMockGraph2() Graph {
 						Energy: 999,
 					},
 				},
-				locationInfo{
-					lat: 4.4,
-					lon: 4.4,
+				nav.Location{
+					Lat: 4.4,
+					Lon: 4.4,
 				},
 			},
 			{
@@ -192,9 +195,9 @@ func NewMockGraph2() Graph {
 						Energy: 999,
 					},
 				},
-				locationInfo{
-					lat: 5.5,
-					lon: 5.5,
+				nav.Location{
+					Lat: 5.5,
+					Lon: 5.5,
 				},
 			},
 			{
@@ -204,9 +207,9 @@ func NewMockGraph2() Graph {
 						Energy: 999,
 					},
 				},
-				locationInfo{
-					lat: 6.6,
-					lon: 6.6,
+				nav.Location{
+					Lat: 6.6,
+					Lon: 6.6,
 				},
 			},
 			{
@@ -216,9 +219,9 @@ func NewMockGraph2() Graph {
 						Energy: 999,
 					},
 				},
-				locationInfo{
-					lat: 7.7,
-					lon: 7.7,
+				nav.Location{
+					Lat: 7.7,
+					Lon: 7.7,
 				},
 			},
 			{
@@ -228,9 +231,9 @@ func NewMockGraph2() Graph {
 						Energy: 999,
 					},
 				},
-				locationInfo{
-					lat: 8.8,
-					lon: 8.8,
+				nav.Location{
+					Lat: 8.8,
+					Lon: 8.8,
 				},
 			},
 		},
@@ -245,7 +248,7 @@ func NewMockGraph2() Graph {
 			"node_7",
 			"node_8",
 		},
-		map[nodeID][]*edgeIDAndData{
+		map[nodeID][]*edge{
 			// node_0 -> node_1, duration = 30, distance = 30
 			// node_0 -> node_2, duration = 20, distance = 20
 			0: {
@@ -254,7 +257,7 @@ func NewMockGraph2() Graph {
 						0,
 						1,
 					},
-					&edge{
+					&edgeMetric{
 						30,
 						30,
 					},
@@ -264,7 +267,7 @@ func NewMockGraph2() Graph {
 						0,
 						2,
 					},
-					&edge{
+					&edgeMetric{
 						20,
 						20,
 					},
@@ -278,7 +281,7 @@ func NewMockGraph2() Graph {
 						1,
 						3,
 					},
-					&edge{
+					&edgeMetric{
 						20,
 						20,
 					},
@@ -288,7 +291,7 @@ func NewMockGraph2() Graph {
 						1,
 						4,
 					},
-					&edge{
+					&edgeMetric{
 						15,
 						15,
 					},
@@ -302,7 +305,7 @@ func NewMockGraph2() Graph {
 						2,
 						3,
 					},
-					&edge{
+					&edgeMetric{
 						30,
 						30,
 					},
@@ -312,7 +315,7 @@ func NewMockGraph2() Graph {
 						2,
 						4,
 					},
-					&edge{
+					&edgeMetric{
 						20,
 						20,
 					},
@@ -327,7 +330,7 @@ func NewMockGraph2() Graph {
 						3,
 						5,
 					},
-					&edge{
+					&edgeMetric{
 						10,
 						10,
 					},
@@ -337,7 +340,7 @@ func NewMockGraph2() Graph {
 						3,
 						6,
 					},
-					&edge{
+					&edgeMetric{
 						10,
 						10,
 					},
@@ -347,7 +350,7 @@ func NewMockGraph2() Graph {
 						3,
 						7,
 					},
-					&edge{
+					&edgeMetric{
 						10,
 						10,
 					},
@@ -362,7 +365,7 @@ func NewMockGraph2() Graph {
 						4,
 						5,
 					},
-					&edge{
+					&edgeMetric{
 						15,
 						15,
 					},
@@ -372,7 +375,7 @@ func NewMockGraph2() Graph {
 						4,
 						6,
 					},
-					&edge{
+					&edgeMetric{
 						15,
 						15,
 					},
@@ -382,7 +385,7 @@ func NewMockGraph2() Graph {
 						4,
 						7,
 					},
-					&edge{
+					&edgeMetric{
 						15,
 						15,
 					},
@@ -395,7 +398,7 @@ func NewMockGraph2() Graph {
 						5,
 						8,
 					},
-					&edge{
+					&edgeMetric{
 						10,
 						10,
 					},
@@ -408,7 +411,7 @@ func NewMockGraph2() Graph {
 						6,
 						8,
 					},
-					&edge{
+					&edgeMetric{
 						20,
 						20,
 					},
@@ -421,7 +424,7 @@ func NewMockGraph2() Graph {
 						7,
 						8,
 					},
-					&edge{
+					&edgeMetric{
 						30,
 						30,
 					},
@@ -458,9 +461,9 @@ func NewMockGraph3() Graph {
 						Energy: 999,
 					},
 				},
-				locationInfo{
-					lat: 0.0,
-					lon: 0.0,
+				nav.Location{
+					Lat: 0.0,
+					Lon: 0.0,
 				},
 			},
 			{
@@ -470,9 +473,9 @@ func NewMockGraph3() Graph {
 						Energy: 999,
 					},
 				},
-				locationInfo{
-					lat: 1.1,
-					lon: 1.1,
+				nav.Location{
+					Lat: 1.1,
+					Lon: 1.1,
 				},
 			},
 			{
@@ -482,9 +485,9 @@ func NewMockGraph3() Graph {
 						Energy: 999,
 					},
 				},
-				locationInfo{
-					lat: 2.2,
-					lon: 2.2,
+				nav.Location{
+					Lat: 2.2,
+					Lon: 2.2,
 				},
 			},
 			{
@@ -494,9 +497,9 @@ func NewMockGraph3() Graph {
 						Energy: 999,
 					},
 				},
-				locationInfo{
-					lat: 3.3,
-					lon: 3.3,
+				nav.Location{
+					Lat: 3.3,
+					Lon: 3.3,
 				},
 			},
 			{
@@ -506,9 +509,9 @@ func NewMockGraph3() Graph {
 						Energy: 999,
 					},
 				},
-				locationInfo{
-					lat: 4.4,
-					lon: 4.4,
+				nav.Location{
+					Lat: 4.4,
+					Lon: 4.4,
 				},
 			},
 			{
@@ -518,9 +521,9 @@ func NewMockGraph3() Graph {
 						Energy: 999,
 					},
 				},
-				locationInfo{
-					lat: 5.5,
-					lon: 5.5,
+				nav.Location{
+					Lat: 5.5,
+					Lon: 5.5,
 				},
 			},
 			{
@@ -530,9 +533,9 @@ func NewMockGraph3() Graph {
 						Energy: 999,
 					},
 				},
-				locationInfo{
-					lat: 6.6,
-					lon: 6.6,
+				nav.Location{
+					Lat: 6.6,
+					Lon: 6.6,
 				},
 			},
 			{
@@ -542,9 +545,9 @@ func NewMockGraph3() Graph {
 						Energy: 999,
 					},
 				},
-				locationInfo{
-					lat: 7.7,
-					lon: 7.7,
+				nav.Location{
+					Lat: 7.7,
+					Lon: 7.7,
 				},
 			},
 			{
@@ -554,9 +557,9 @@ func NewMockGraph3() Graph {
 						Energy: 999,
 					},
 				},
-				locationInfo{
-					lat: 8.8,
-					lon: 8.8,
+				nav.Location{
+					Lat: 8.8,
+					Lon: 8.8,
 				},
 			},
 		},
@@ -571,7 +574,7 @@ func NewMockGraph3() Graph {
 			"node_7",
 			"node_8",
 		},
-		map[nodeID][]*edgeIDAndData{
+		map[nodeID][]*edge{
 			// node_0 -> node_1, duration = 15, distance = 15
 			// node_0 -> node_2, duration = 20, distance = 20
 			0: {
@@ -580,7 +583,7 @@ func NewMockGraph3() Graph {
 						0,
 						1,
 					},
-					&edge{
+					&edgeMetric{
 						15,
 						15,
 					},
@@ -590,7 +593,7 @@ func NewMockGraph3() Graph {
 						0,
 						2,
 					},
-					&edge{
+					&edgeMetric{
 						20,
 						20,
 					},
@@ -604,7 +607,7 @@ func NewMockGraph3() Graph {
 						1,
 						3,
 					},
-					&edge{
+					&edgeMetric{
 						20,
 						20,
 					},
@@ -614,7 +617,7 @@ func NewMockGraph3() Graph {
 						1,
 						4,
 					},
-					&edge{
+					&edgeMetric{
 						15,
 						15,
 					},
@@ -628,7 +631,7 @@ func NewMockGraph3() Graph {
 						2,
 						3,
 					},
-					&edge{
+					&edgeMetric{
 						30,
 						30,
 					},
@@ -638,7 +641,7 @@ func NewMockGraph3() Graph {
 						2,
 						4,
 					},
-					&edge{
+					&edgeMetric{
 						20,
 						20,
 					},
@@ -653,7 +656,7 @@ func NewMockGraph3() Graph {
 						3,
 						5,
 					},
-					&edge{
+					&edgeMetric{
 						10,
 						10,
 					},
@@ -663,7 +666,7 @@ func NewMockGraph3() Graph {
 						3,
 						6,
 					},
-					&edge{
+					&edgeMetric{
 						10,
 						10,
 					},
@@ -673,7 +676,7 @@ func NewMockGraph3() Graph {
 						3,
 						7,
 					},
-					&edge{
+					&edgeMetric{
 						10,
 						10,
 					},
@@ -688,7 +691,7 @@ func NewMockGraph3() Graph {
 						4,
 						5,
 					},
-					&edge{
+					&edgeMetric{
 						15,
 						15,
 					},
@@ -698,7 +701,7 @@ func NewMockGraph3() Graph {
 						4,
 						6,
 					},
-					&edge{
+					&edgeMetric{
 						15,
 						15,
 					},
@@ -708,7 +711,7 @@ func NewMockGraph3() Graph {
 						4,
 						7,
 					},
-					&edge{
+					&edgeMetric{
 						15,
 						15,
 					},
@@ -721,7 +724,7 @@ func NewMockGraph3() Graph {
 						5,
 						8,
 					},
-					&edge{
+					&edgeMetric{
 						10,
 						10,
 					},
@@ -734,7 +737,7 @@ func NewMockGraph3() Graph {
 						6,
 						8,
 					},
-					&edge{
+					&edgeMetric{
 						20,
 						20,
 					},
@@ -747,7 +750,7 @@ func NewMockGraph3() Graph {
 						7,
 						8,
 					},
-					&edge{
+					&edgeMetric{
 						30,
 						30,
 					},
@@ -785,9 +788,9 @@ func NewMockGraph4() Graph {
 						Energy: 16,
 					},
 				},
-				locationInfo{
-					lat: 0.0,
-					lon: 0.0,
+				nav.Location{
+					Lat: 0.0,
+					Lon: 0.0,
 				},
 			},
 			{
@@ -797,9 +800,9 @@ func NewMockGraph4() Graph {
 						Energy: 16,
 					},
 				},
-				locationInfo{
-					lat: 1.1,
-					lon: 1.1,
+				nav.Location{
+					Lat: 1.1,
+					Lon: 1.1,
 				},
 			},
 			{
@@ -809,9 +812,9 @@ func NewMockGraph4() Graph {
 						Energy: 16,
 					},
 				},
-				locationInfo{
-					lat: 2.2,
-					lon: 2.2,
+				nav.Location{
+					Lat: 2.2,
+					Lon: 2.2,
 				},
 			},
 			{
@@ -821,9 +824,9 @@ func NewMockGraph4() Graph {
 						Energy: 16,
 					},
 				},
-				locationInfo{
-					lat: 3.3,
-					lon: 3.3,
+				nav.Location{
+					Lat: 3.3,
+					Lon: 3.3,
 				},
 			},
 			{
@@ -833,9 +836,9 @@ func NewMockGraph4() Graph {
 						Energy: 16,
 					},
 				},
-				locationInfo{
-					lat: 4.4,
-					lon: 4.4,
+				nav.Location{
+					Lat: 4.4,
+					Lon: 4.4,
 				},
 			},
 			{
@@ -845,9 +848,9 @@ func NewMockGraph4() Graph {
 						Energy: 16,
 					},
 				},
-				locationInfo{
-					lat: 5.5,
-					lon: 5.5,
+				nav.Location{
+					Lat: 5.5,
+					Lon: 5.5,
 				},
 			},
 			{
@@ -857,9 +860,9 @@ func NewMockGraph4() Graph {
 						Energy: 16,
 					},
 				},
-				locationInfo{
-					lat: 6.6,
-					lon: 6.6,
+				nav.Location{
+					Lat: 6.6,
+					Lon: 6.6,
 				},
 			},
 			{
@@ -869,9 +872,9 @@ func NewMockGraph4() Graph {
 						Energy: 16,
 					},
 				},
-				locationInfo{
-					lat: 7.7,
-					lon: 7.7,
+				nav.Location{
+					Lat: 7.7,
+					Lon: 7.7,
 				},
 			},
 			{
@@ -881,9 +884,9 @@ func NewMockGraph4() Graph {
 						Energy: 0,
 					},
 				},
-				locationInfo{
-					lat: 8.8,
-					lon: 8.8,
+				nav.Location{
+					Lat: 8.8,
+					Lon: 8.8,
 				},
 			},
 		},
@@ -898,7 +901,7 @@ func NewMockGraph4() Graph {
 			"node_7",
 			"node_8",
 		},
-		map[nodeID][]*edgeIDAndData{
+		map[nodeID][]*edge{
 			// node_0 -> node_1, duration = 15, distance = 15
 			// node_0 -> node_2, duration = 20, distance = 20
 			0: {
@@ -907,7 +910,7 @@ func NewMockGraph4() Graph {
 						0,
 						1,
 					},
-					&edge{
+					&edgeMetric{
 						15,
 						15,
 					},
@@ -917,7 +920,7 @@ func NewMockGraph4() Graph {
 						0,
 						2,
 					},
-					&edge{
+					&edgeMetric{
 						20,
 						20,
 					},
@@ -931,7 +934,7 @@ func NewMockGraph4() Graph {
 						1,
 						3,
 					},
-					&edge{
+					&edgeMetric{
 						20,
 						20,
 					},
@@ -941,7 +944,7 @@ func NewMockGraph4() Graph {
 						1,
 						4,
 					},
-					&edge{
+					&edgeMetric{
 						15,
 						15,
 					},
@@ -955,7 +958,7 @@ func NewMockGraph4() Graph {
 						2,
 						3,
 					},
-					&edge{
+					&edgeMetric{
 						30,
 						30,
 					},
@@ -965,7 +968,7 @@ func NewMockGraph4() Graph {
 						2,
 						4,
 					},
-					&edge{
+					&edgeMetric{
 						5,
 						5,
 					},
@@ -980,7 +983,7 @@ func NewMockGraph4() Graph {
 						3,
 						5,
 					},
-					&edge{
+					&edgeMetric{
 						10,
 						10,
 					},
@@ -990,7 +993,7 @@ func NewMockGraph4() Graph {
 						3,
 						6,
 					},
-					&edge{
+					&edgeMetric{
 						10,
 						10,
 					},
@@ -1000,7 +1003,7 @@ func NewMockGraph4() Graph {
 						3,
 						7,
 					},
-					&edge{
+					&edgeMetric{
 						10,
 						10,
 					},
@@ -1015,7 +1018,7 @@ func NewMockGraph4() Graph {
 						4,
 						5,
 					},
-					&edge{
+					&edgeMetric{
 						15,
 						15,
 					},
@@ -1025,7 +1028,7 @@ func NewMockGraph4() Graph {
 						4,
 						6,
 					},
-					&edge{
+					&edgeMetric{
 						15,
 						15,
 					},
@@ -1035,7 +1038,7 @@ func NewMockGraph4() Graph {
 						4,
 						7,
 					},
-					&edge{
+					&edgeMetric{
 						15,
 						15,
 					},
@@ -1048,7 +1051,7 @@ func NewMockGraph4() Graph {
 						5,
 						8,
 					},
-					&edge{
+					&edgeMetric{
 						10,
 						10,
 					},
@@ -1061,7 +1064,7 @@ func NewMockGraph4() Graph {
 						6,
 						8,
 					},
-					&edge{
+					&edgeMetric{
 						20,
 						20,
 					},
@@ -1074,7 +1077,7 @@ func NewMockGraph4() Graph {
 						7,
 						8,
 					},
-					&edge{
+					&edgeMetric{
 						30,
 						30,
 					},
@@ -1088,7 +1091,7 @@ func NewMockGraph4() Graph {
 type mockGraph struct {
 	nodes      []*node
 	stationIDs []string
-	edges      map[nodeID][]*edgeIDAndData
+	edges      map[nodeID][]*edge
 	strategy   chargingstrategy.Strategy
 }
 
@@ -1117,13 +1120,13 @@ func (graph *mockGraph) AdjacentNodes(id nodeID) []nodeID {
 }
 
 // Edge returns edge information between given two nodes
-func (graph *mockGraph) Edge(from, to nodeID) *edge {
+func (graph *mockGraph) Edge(from, to nodeID) *edgeMetric {
 	if graph.isValidNodeID(from) && graph.isValidNodeID(to) {
 		edges, ok := graph.edges[from]
 		if ok {
 			for _, edge := range edges {
 				if edge.edgeId.toNodeID == to {
-					return edge.edgeData
+					return edge.edgeMetric
 				}
 			}
 		}
@@ -1133,12 +1136,12 @@ func (graph *mockGraph) Edge(from, to nodeID) *edge {
 }
 
 // SetStart generates start node for the graph
-func (graph *mockGraph) SetStart(stationID string, targetState chargingstrategy.State, location locationInfo) Graph {
+func (graph *mockGraph) SetStart(stationID string, targetState chargingstrategy.State, location nav.Location) Graph {
 	return graph
 }
 
 // SetEnd generates end node for the graph
-func (graph *mockGraph) SetEnd(stationID string, targetState chargingstrategy.State, location locationInfo) Graph {
+func (graph *mockGraph) SetEnd(stationID string, targetState chargingstrategy.State, location nav.Location) Graph {
 	return graph
 }
 

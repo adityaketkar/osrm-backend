@@ -3,6 +3,7 @@ package stationgraph
 import (
 	"math"
 
+	"github.com/Telenav/osrm-backend/integration/pkg/api/nav"
 	"github.com/Telenav/osrm-backend/integration/service/oasis/chargingstrategy"
 	"github.com/golang/glog"
 )
@@ -13,15 +14,10 @@ type chargeInfo struct {
 	targetState   chargingstrategy.State
 }
 
-type locationInfo struct {
-	lat float64
-	lon float64
-}
-
 type node struct {
 	id nodeID
 	chargeInfo
-	locationInfo
+	nav.Location
 }
 
 type nodeID uint32

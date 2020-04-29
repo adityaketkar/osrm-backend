@@ -4,6 +4,8 @@ Changes from v10.2.0
 - Feature:    
   - ADDED **HTTP API** `annotation/ways` in OSRM route response after `osrm-ranking` process(retrieve `annotation/ways` from `annotation/nodes`) [#296](https://github.com/Telenav/osrm-backend/pull/296)    
   - CHANGED for internal refactoring, moved `unidbpatch` and `mapsource` packages into `integration/util` folder [#300](https://github.com/Telenav/osrm-backend/pull/300)
+  - CHANGED for internal refactoring, refactor stationgraph to isolate algorithm, data structure and topological [#302](https://github.com/Telenav/osrm-backend/pull/302)
+  - CHANGED for internal refactoring, change `edgeIDAndData` to `edge` and replace internal location definition with nav.Location [#307](https://github.com/Telenav/osrm-backend/pull/307)
   - CHANGED live traffic cache from edge indexed to way indexed in `osrm-ranking` [#303](https://github.com/Telenav/osrm-backend/pull/303)
   - REMOVED edge indexed live traffic cache in `osrm-ranking` [#308](https://github.com/Telenav/osrm-backend/pull/308)
 - Bugfix:    

@@ -15,9 +15,13 @@ func TestAddAndGetStartAndEndNodeForNodeGraph(t *testing.T) {
 	graph := NewNodeGraph(nil, nil)
 
 	expectStartChargeState := chargingstrategy.State{Energy: 10.0}
-	expectStartLocation := locationInfo{33.33, -122.22}
+	expectStartLocation := nav.Location{
+		Lat: 33.33,
+		Lon: -122.22}
 	expectEndChargeState := chargingstrategy.State{}
-	expectEndLocation := locationInfo{34.44, -124.44}
+	expectEndLocation := nav.Location{
+		Lat: 34.44,
+		Lon: -124.44}
 
 	graph.SetStart(stationfindertype.OrigLocationID, expectStartChargeState, expectStartLocation).
 		SetEnd(stationfindertype.DestLocationID, expectEndChargeState, expectEndLocation)
@@ -31,16 +35,18 @@ func TestAddAndGetStartAndEndNodeForNodeGraph(t *testing.T) {
 	}
 
 	startNode := graph.Node(graph.StartNodeID())
-	if !reflect.DeepEqual(startNode.locationInfo, expectStartLocation) {
-		t.Errorf("Incorrect result for start's location, expect %#v but got %#v.\n", expectStartLocation, startNode.locationInfo)
+	if !(reflect.DeepEqual(startNode.Lat, expectStartLocation.Lat) &&
+		reflect.DeepEqual(startNode.Lon, expectStartLocation.Lon)) {
+		t.Errorf("Incorrect result for start's location, expect %#v but got %#v.\n", expectStartLocation, startNode)
 	}
 	if !reflect.DeepEqual(startNode.chargeInfo.targetState, expectStartChargeState) {
 		t.Errorf("Incorrect result for start's charge state, expect %#v but got %#v.\n", expectStartChargeState, startNode.chargeInfo.targetState)
 	}
 
 	endNode := graph.Node(graph.EndNodeID())
-	if !reflect.DeepEqual(endNode.locationInfo, expectEndLocation) {
-		t.Errorf("Incorrect result for end's location, expect %#v but got %#v.\n", expectEndLocation, endNode.locationInfo)
+	if !(reflect.DeepEqual(endNode.Lat, expectEndLocation.Lat) &&
+		reflect.DeepEqual(endNode.Lon, expectEndLocation.Lon)) {
+		t.Errorf("Incorrect result for end's location, expect %#v but got %#v.\n", expectEndLocation, endNode)
 	}
 	if !reflect.DeepEqual(endNode.chargeInfo.targetState, expectEndChargeState) {
 		t.Errorf("Incorrect result for end's charge state, expect %#v but got %#v.\n", expectEndChargeState, endNode.chargeInfo.targetState)
@@ -59,111 +65,111 @@ func TestAdjacentNodesInterfaceForNodeGraph(t *testing.T) {
 
 	expectNodes := []*node{
 		{
-			id: 1,
-			chargeInfo: chargeInfo{
+			1,
+			chargeInfo{
 				targetState: chargingstrategy.State{
 					Energy: 60.0,
 				},
 			},
-			locationInfo: locationInfo{
-				lat: 2.2,
-				lon: 2.2,
+			nav.Location{
+				Lat: 2.2,
+				Lon: 2.2,
 			},
 		},
 		{
-			id: 2,
-			chargeInfo: chargeInfo{
+			2,
+			chargeInfo{
 				targetState: chargingstrategy.State{
 					Energy: 80.0,
 				},
 			},
-			locationInfo: locationInfo{
-				lat: 2.2,
-				lon: 2.2,
+			nav.Location{
+				Lat: 2.2,
+				Lon: 2.2,
 			},
 		},
 		{
-			id: 3,
-			chargeInfo: chargeInfo{
+			3,
+			chargeInfo{
 				targetState: chargingstrategy.State{
 					Energy: 100.0,
 				},
 			},
-			locationInfo: locationInfo{
-				lat: 2.2,
-				lon: 2.2,
+			nav.Location{
+				Lat: 2.2,
+				Lon: 2.2,
 			},
 		},
 		{
-			id: 4,
-			chargeInfo: chargeInfo{
+			4,
+			chargeInfo{
 				targetState: chargingstrategy.State{
 					Energy: 60.0,
 				},
 			},
-			locationInfo: locationInfo{
-				lat: 3.3,
-				lon: 3.3,
+			nav.Location{
+				Lat: 3.3,
+				Lon: 3.3,
 			},
 		},
 		{
-			id: 5,
-			chargeInfo: chargeInfo{
+			5,
+			chargeInfo{
 				targetState: chargingstrategy.State{
 					Energy: 80.0,
 				},
 			},
-			locationInfo: locationInfo{
-				lat: 3.3,
-				lon: 3.3,
+			nav.Location{
+				Lat: 3.3,
+				Lon: 3.3,
 			},
 		},
 		{
-			id: 6,
-			chargeInfo: chargeInfo{
+			6,
+			chargeInfo{
 				targetState: chargingstrategy.State{
 					Energy: 100.0,
 				},
 			},
-			locationInfo: locationInfo{
-				lat: 3.3,
-				lon: 3.3,
+			nav.Location{
+				Lat: 3.3,
+				Lon: 3.3,
 			},
 		},
 		{
-			id: 7,
-			chargeInfo: chargeInfo{
+			7,
+			chargeInfo{
 				targetState: chargingstrategy.State{
 					Energy: 60.0,
 				},
 			},
-			locationInfo: locationInfo{
-				lat: 4.4,
-				lon: 4.4,
+			nav.Location{
+				Lat: 4.4,
+				Lon: 4.4,
 			},
 		},
 		{
-			id: 8,
-			chargeInfo: chargeInfo{
+			8,
+			chargeInfo{
 				targetState: chargingstrategy.State{
 					Energy: 80.0,
 				},
 			},
-			locationInfo: locationInfo{
-				lat: 4.4,
-				lon: 4.4,
+			nav.Location{
+				Lat: 4.4,
+				Lon: 4.4,
 			},
 		},
 		{
-			id: 9,
-			chargeInfo: chargeInfo{
+			9,
+			chargeInfo{
 				targetState: chargingstrategy.State{
 					Energy: 100.0,
 				},
 			},
-			locationInfo: locationInfo{
-				lat: 4.4,
-				lon: 4.4,
+			nav.Location{
+				Lat: 4.4,
+				Lon: 4.4,
 			},
 		},
 	}
@@ -180,7 +186,7 @@ func TestEdgeInterfaceForNodeGraph(t *testing.T) {
 	graph := generateMockNodeGraph()
 	nodeIDs := graph.AdjacentNodes(graph.StartNodeID())
 
-	expectEdges := []*edge{
+	expectEdges := []*edgeMetric{
 		{
 			distance: 2,
 			duration: 2,
@@ -219,7 +225,7 @@ func TestEdgeInterfaceForNodeGraph(t *testing.T) {
 		},
 	}
 
-	actualEdges := make([]*edge, 0, len(nodeIDs))
+	actualEdges := make([]*edgeMetric, 0, len(nodeIDs))
 	fromNodeID := graph.StartNodeID()
 	for _, toNodeID := range nodeIDs {
 		actualEdges = append(actualEdges, graph.Edge(fromNodeID, toNodeID))
@@ -263,7 +269,7 @@ func generateMockNodeGraph() Graph {
 	graph := NewNodeGraph(strategy, querier)
 
 	origLocation := querier.GetLocation(testStationID1)
-	graph.SetStart(testStationID1, chargingstrategy.State{Energy: currEnergyLevel}, locationInfo{lat: origLocation.Lat, lon: origLocation.Lon})
+	graph.SetStart(testStationID1, chargingstrategy.State{Energy: currEnergyLevel}, nav.Location{Lat: origLocation.Lat, Lon: origLocation.Lon})
 
 	return graph
 }

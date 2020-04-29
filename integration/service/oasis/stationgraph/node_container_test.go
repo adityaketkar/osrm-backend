@@ -6,6 +6,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/Telenav/osrm-backend/integration/pkg/api/nav"
 	"github.com/Telenav/osrm-backend/integration/service/oasis/chargingstrategy"
 )
 
@@ -13,16 +14,16 @@ func TestAddAndGetFunctionsForNodeContainer(t *testing.T) {
 	input := []struct {
 		stationID   string
 		chargeState chargingstrategy.State
-		location    locationInfo
+		location    nav.Location
 	}{
 		{
 			"station1",
 			chargingstrategy.State{
 				Energy: 10.0,
 			},
-			locationInfo{
-				lat: 1.1,
-				lon: 1.1,
+			nav.Location{
+				Lat: 1.1,
+				Lon: 1.1,
 			},
 		},
 		{
@@ -30,9 +31,9 @@ func TestAddAndGetFunctionsForNodeContainer(t *testing.T) {
 			chargingstrategy.State{
 				Energy: 20.0,
 			},
-			locationInfo{
-				lat: 1.1,
-				lon: 1.1,
+			nav.Location{
+				Lat: 1.1,
+				Lon: 1.1,
 			},
 		},
 		{
@@ -40,9 +41,9 @@ func TestAddAndGetFunctionsForNodeContainer(t *testing.T) {
 			chargingstrategy.State{
 				Energy: 30.0,
 			},
-			locationInfo{
-				lat: 1.1,
-				lon: 1.1,
+			nav.Location{
+				Lat: 1.1,
+				Lon: 1.1,
 			},
 		},
 		{
@@ -50,9 +51,9 @@ func TestAddAndGetFunctionsForNodeContainer(t *testing.T) {
 			chargingstrategy.State{
 				Energy: 10.0,
 			},
-			locationInfo{
-				lat: 2.2,
-				lon: 2.2,
+			nav.Location{
+				Lat: 2.2,
+				Lon: 2.2,
 			},
 		},
 		{
@@ -60,9 +61,9 @@ func TestAddAndGetFunctionsForNodeContainer(t *testing.T) {
 			chargingstrategy.State{
 				Energy: 20.0,
 			},
-			locationInfo{
-				lat: 2.2,
-				lon: 2.2,
+			nav.Location{
+				Lat: 2.2,
+				Lon: 2.2,
 			},
 		},
 		{
@@ -70,9 +71,9 @@ func TestAddAndGetFunctionsForNodeContainer(t *testing.T) {
 			chargingstrategy.State{
 				Energy: 15.0,
 			},
-			locationInfo{
-				lat: 3.3,
-				lon: 3.3,
+			nav.Location{
+				Lat: 3.3,
+				Lon: 3.3,
 			},
 		},
 	}
@@ -89,9 +90,9 @@ func TestAddAndGetFunctionsForNodeContainer(t *testing.T) {
 						Energy: 10.0,
 					},
 				},
-				locationInfo{
-					lat: 1.1,
-					lon: 1.1,
+				nav.Location{
+					Lat: 1.1,
+					Lon: 1.1,
 				},
 			},
 			"station1",
@@ -104,9 +105,9 @@ func TestAddAndGetFunctionsForNodeContainer(t *testing.T) {
 						Energy: 20.0,
 					},
 				},
-				locationInfo{
-					lat: 1.1,
-					lon: 1.1,
+				nav.Location{
+					Lat: 1.1,
+					Lon: 1.1,
 				},
 			},
 			"station1",
@@ -119,9 +120,9 @@ func TestAddAndGetFunctionsForNodeContainer(t *testing.T) {
 						Energy: 30.0,
 					},
 				},
-				locationInfo{
-					lat: 1.1,
-					lon: 1.1,
+				nav.Location{
+					Lat: 1.1,
+					Lon: 1.1,
 				},
 			},
 			"station1",
@@ -134,9 +135,9 @@ func TestAddAndGetFunctionsForNodeContainer(t *testing.T) {
 						Energy: 10.0,
 					},
 				},
-				locationInfo{
-					lat: 2.2,
-					lon: 2.2,
+				nav.Location{
+					Lat: 2.2,
+					Lon: 2.2,
 				},
 			},
 			"station2",
@@ -149,9 +150,9 @@ func TestAddAndGetFunctionsForNodeContainer(t *testing.T) {
 						Energy: 20.0,
 					},
 				},
-				locationInfo{
-					lat: 2.2,
-					lon: 2.2,
+				nav.Location{
+					Lat: 2.2,
+					Lon: 2.2,
 				},
 			},
 			"station2",
@@ -164,9 +165,9 @@ func TestAddAndGetFunctionsForNodeContainer(t *testing.T) {
 						Energy: 15.0,
 					},
 				},
-				locationInfo{
-					lat: 3.3,
-					lon: 3.3,
+				nav.Location{
+					Lat: 3.3,
+					Lon: 3.3,
 				},
 			},
 			"station3",
@@ -222,16 +223,16 @@ func TestAddDuplicateNodeForNodeContainer(t *testing.T) {
 	input := []struct {
 		stationID   string
 		chargeState chargingstrategy.State
-		location    locationInfo
+		location    nav.Location
 	}{
 		{
 			"station1",
 			chargingstrategy.State{
 				Energy: 10.0,
 			},
-			locationInfo{
-				lat: 1.1,
-				lon: 1.1,
+			nav.Location{
+				Lat: 1.1,
+				Lon: 1.1,
 			},
 		},
 		{
@@ -239,9 +240,9 @@ func TestAddDuplicateNodeForNodeContainer(t *testing.T) {
 			chargingstrategy.State{
 				Energy: 10.0,
 			},
-			locationInfo{
-				lat: 1.1,
-				lon: 1.1,
+			nav.Location{
+				Lat: 1.1,
+				Lon: 1.1,
 			},
 		},
 		{
@@ -249,9 +250,9 @@ func TestAddDuplicateNodeForNodeContainer(t *testing.T) {
 			chargingstrategy.State{
 				Energy: 10.0,
 			},
-			locationInfo{
-				lat: 1.1,
-				lon: 1.1,
+			nav.Location{
+				Lat: 1.1,
+				Lon: 1.1,
 			},
 		},
 	}
@@ -267,9 +268,9 @@ func TestAddDuplicateNodeForNodeContainer(t *testing.T) {
 					Energy: 10.0,
 				},
 			},
-			locationInfo{
-				lat: 1.1,
-				lon: 1.1,
+			nav.Location{
+				Lat: 1.1,
+				Lon: 1.1,
 			},
 		},
 		"station1",
