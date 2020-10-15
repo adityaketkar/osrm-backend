@@ -21,7 +21,11 @@
 
 #include <boost/assert.hpp>
 
+#if TBB_VERSION_MAJOR == 2020
+#include <tbb/global_control.h>
+#else
 #include <tbb/task_scheduler_init.h>
+#endif
 
 namespace osrm
 {
@@ -136,8 +140,13 @@ bool customizeFilteredMetrics(const partitioner::MultiLevelEdgeBasedGraph &graph
 
 int Customizer::Run(const CustomizationConfig &config)
 {
+#if TBB_VERSION_MAJOR == 2020
+    tbb::global_control gc(tbb::global_control::max_allowed_parallelism,
+                           config.requested_num_threads);
+#else
     tbb::task_scheduler_init init(config.requested_num_threads);
     BOOST_ASSERT(init.is_active());
+#endif
 
     TIMER_START(loading_data);
 
