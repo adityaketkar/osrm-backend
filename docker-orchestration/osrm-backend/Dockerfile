@@ -17,7 +17,7 @@ RUN echo "Building on ${GIT_COMMIT}" && \
 ARG CMAKE_BUILD_EXTRA_ARGS=
 RUN mkdir -p osrm-backend/build && \
   cd osrm-backend/build && \
-  cmake .. -DENABLE_LTO=On && \
+  cmake .. -DENABLE_DEBUG_LOGGING=ON -DENABLE_LTO=ON && \
   cmake --build . ${CMAKE_BUILD_EXTRA_ARGS} && \
   cp /workspace/osrm-backend/build/osrm* /osrm-build/ && \
   cp -r /workspace/osrm-backend/profiles /osrm-build/
