@@ -26,7 +26,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: clang-format
-        run: docker run --mount "src=$(pwd),dst=/workspace/osrm-backend,type=bind" telenavmap/osrm-backend-dev bash -c "cd /workspace/osrm-backend && ./scripts/format.sh"
+        run: docker run --mount "src=$(pwd),dst=/workspace/osrm-backend,type=bind" telenavmap/osrm-backend-dev bash -c "cd /workspace/osrm-backend && ./scripts/format.sh && ./scripts/error_on_dirty.sh"
   
   ci-linux:
     name: osrm-backend CI ubuntu
