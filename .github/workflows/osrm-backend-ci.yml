@@ -19,6 +19,14 @@ on:
 
 jobs:
 
+  ci-clang-format:
+    name: osrm-backend check codes format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: clang-format
+        run: docker run --mount "src=$(pwd),dst=/workspace/osrm-backend,type=bind" telenavmap/osrm-backend-dev "cd /workspace/osrm-backend && ./scripts/format.sh"
+  
   ci-linux:
     name: osrm-backend CI ubuntu
     runs-on: ubuntu-latest
