@@ -145,13 +145,13 @@ void checkWeightsConsistency(
 
 static const constexpr std::size_t LUA_SOURCE = 0;
 
-void recordsUpdatedNodes(NodeSetPtr& node_updated, const NodeID n)
+void recordsUpdatedNodes(NodeSetPtr &node_updated, const NodeID n)
 {
     if (node_updated)
     {
-       node_updated->insert(n);
+        node_updated->insert(n);
     }
- }
+}
 
 tbb::concurrent_vector<GeometryID>
 updateSegmentData(const UpdaterConfig &config,
@@ -667,7 +667,8 @@ Updater::LoadAndUpdateEdgeExpandedGraph(std::vector<extractor::EdgeBasedEdge> &e
                        });
     }
 
-    // @Telenav, after the modification of #49, conditional_turns related cell will also need to be adjusted
+    // @Telenav, after the modification of #49, conditional_turns related cell will also need to be
+    // adjusted
     if (update_conditional_turns)
     {
         // initialize instance of class that handles time zone resolution

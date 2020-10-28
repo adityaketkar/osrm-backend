@@ -119,7 +119,6 @@ BOOST_AUTO_TEST_CASE(two_level_test)
     CHECK_EQUAL_RANGE(cell_1_1.GetInWeight(3), 1, 0);
 }
 
-
 BOOST_AUTO_TEST_CASE(two_level_test2)
 {
     // 0 --- 1

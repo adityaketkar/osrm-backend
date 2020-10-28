@@ -1,9 +1,9 @@
 #ifndef OSRM_UPDATER_UPDATER_HPP
 #define OSRM_UPDATER_UPDATER_HPP
 
-#include "updater/updater_config.hpp"
 #include "extractor/edge_based_edge.hpp"
 #include "tbb/concurrent_unordered_set.h"
+#include "updater/updater_config.hpp"
 
 #include <chrono>
 #include <vector>
