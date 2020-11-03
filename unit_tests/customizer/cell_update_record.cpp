@@ -1,7 +1,7 @@
 #include "common/range_tools.hpp"
 
-#include "customizer/cell_update_record.hpp"
 #include "customizer/cell_customizer.hpp"
+#include "customizer/cell_update_record.hpp"
 #include "partitioner/multi_level_graph.hpp"
 #include "partitioner/multi_level_partition.hpp"
 #include "util/static_graph.hpp"
@@ -73,9 +73,9 @@ BOOST_AUTO_TEST_CASE(cell_update_record_basic_test)
 
     BOOST_REQUIRE_EQUAL(mlp.GetNumberOfLevels(), 3);
 
-    std::vector<MockEdge> edges = {{0, 1, 1}, {0, 2, 1}, {2, 3, 1}, {3, 1, 1}, 
-                                   {2, 4, 1}, {3, 5, 1}, {5, 3, 1}, {4, 5, 1}};
-    
+    std::vector<MockEdge> edges = {
+        {0, 1, 1}, {0, 2, 1}, {2, 3, 1}, {3, 1, 1}, {2, 4, 1}, {3, 5, 1}, {5, 3, 1}, {4, 5, 1}};
+
     auto graph = makeGraph(mlp, edges);
     std::vector<bool> node_filter(true, graph.GetNumberOfNodes());
 
@@ -84,7 +84,7 @@ BOOST_AUTO_TEST_CASE(cell_update_record_basic_test)
 
     auto cell_1_0 = storage_rec.GetCell(metric_rec, 1, 0);
     auto cell_1_1 = storage_rec.GetCell(metric_rec, 1, 1);
-    //auto cell_2_0 = storage_rec.GetCell(metric_rec, 2, 0);
+    // auto cell_2_0 = storage_rec.GetCell(metric_rec, 2, 0);
 
     // level 1
     CHECK_EQUAL_RANGE(cell_1_0.GetSourceNodes(), 0);
@@ -129,7 +129,6 @@ BOOST_AUTO_TEST_CASE(cell_update_record_test_check)
     BOOST_REQUIRE_EQUAL(cr.Check(2, 0), true);
 }
 
-
 BOOST_AUTO_TEST_CASE(cell_update_record_with_cost_update)
 {
     // 0 --- 1 --- 4
@@ -144,9 +143,9 @@ BOOST_AUTO_TEST_CASE(cell_update_record_with_cost_update)
 
     // update cost {2, 3, 2}
     // A better way to test is updating cost in the graph after initial customization
-    std::vector<MockEdge> edges = {{0, 1, 1}, {0, 2, 1}, {2, 3, 1}, {3, 1, 1}, 
-                                   {2, 4, 1}, {3, 5, 1}, {5, 3, 1}, {4, 5, 1}};
-    
+    std::vector<MockEdge> edges = {
+        {0, 1, 1}, {0, 2, 1}, {2, 3, 1}, {3, 1, 1}, {2, 4, 1}, {3, 5, 1}, {5, 3, 1}, {4, 5, 1}};
+
     auto graph = makeGraph(mlp, edges);
     std::vector<bool> node_filter(true, graph.GetNumberOfNodes());
     CellStorage storage_rec(mlp, graph);
@@ -169,8 +168,8 @@ BOOST_AUTO_TEST_CASE(cell_update_record_with_cost_update)
     // Init graph 2
     // update cost {2, 3, 2}
     // A better way to test is updating cost in the graph after initial customization
-    std::vector<MockEdge> edges2 = {{0, 1, 1}, {0, 2, 1}, {2, 3, 2}, {3, 1, 1}, 
-                                   {2, 4, 1}, {3, 5, 1}, {5, 3, 1}, {4, 5, 1}};
+    std::vector<MockEdge> edges2 = {
+        {0, 1, 1}, {0, 2, 1}, {2, 3, 2}, {3, 1, 1}, {2, 4, 1}, {3, 5, 1}, {5, 3, 1}, {4, 5, 1}};
     auto graph2 = makeGraph(mlp, edges2);
 
     updater::NodeSetPtr ss = std::make_shared<updater::NodeSet>();
@@ -188,8 +187,9 @@ BOOST_AUTO_TEST_CASE(cell_update_record_with_cost_update)
     CHECK_EQUAL_RANGE(cell_1_1.GetOutWeight(3), 0);
     CHECK_EQUAL_RANGE(cell_1_1.GetInWeight(3), 2, 0);
 
-    BOOST_REQUIRE_EQUAL(cr2.Statistic(), "Cell Update Status(count for levels): (1,1) of (2,1) be updated.  About 66.67% in total.\n");
+    BOOST_REQUIRE_EQUAL(cr2.Statistic(),
+                        "Cell Update Status(count for levels): (1,1) of (2,1) be "
+                        "updated.  About 66.67% in total.\n");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
-

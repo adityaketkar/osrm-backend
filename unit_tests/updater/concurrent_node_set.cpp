@@ -8,7 +8,6 @@ BOOST_AUTO_TEST_SUITE(concurrent_node_set_test)
 
 using namespace osrm;
 
-
 BOOST_AUTO_TEST_CASE(node_set_enable_test)
 {
     updater::NodeSetPtr ns = std::make_shared<updater::NodeSet>();

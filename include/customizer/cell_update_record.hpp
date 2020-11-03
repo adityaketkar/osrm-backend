@@ -1,14 +1,14 @@
 #ifndef OSRM_CELLS_UPDATED_RECORD_HPP
 #define OSRM_CELLS_UPDATED_RECORD_HPP
 
-#include "util/log.hpp"
-#include "updater/updater.hpp"
 #include "partitioner/multi_level_partition.hpp"
+#include "updater/updater.hpp"
+#include "util/log.hpp"
 
 #include "tbb/concurrent_unordered_set.h"
-#include <vector>
-#include <unordered_set>
 #include <iomanip>
+#include <unordered_set>
+#include <vector>
 
 namespace osrm
 {
@@ -19,13 +19,13 @@ namespace detail
 
 class CellUpdateRecordImpl
 {
-//using CellIDSet = std::unordered_set<CellID>
-using CellIDSet = tbb::concurrent_unordered_set<CellID>;
-using MultiLevelCellIDSet = std::vector<CellIDSet>;
-public:
-    CellUpdateRecordImpl(const partitioner::MultiLevelPartition& mlp, bool incremental)
-    : partition(mlp),
-      isIncremental(incremental)
+    // using CellIDSet = std::unordered_set<CellID>
+    using CellIDSet = tbb::concurrent_unordered_set<CellID>;
+    using MultiLevelCellIDSet = std::vector<CellIDSet>;
+
+  public:
+    CellUpdateRecordImpl(const partitioner::MultiLevelPartition &mlp, bool incremental)
+        : partition(mlp), isIncremental(incremental)
     {
         MultiLevelCellIDSet tmp(partition.GetNumberOfLevels() - 1, CellIDSet());
         cellsets = std::move(tmp);
@@ -38,11 +38,11 @@ public:
             return;
         }
 
-        for (const auto& n : *node_updated)
+        for (const auto &n : *node_updated)
         {
             for (std::size_t level = 1; level < partition.GetNumberOfLevels(); ++level)
             {
-                cellsets[level-1].insert(partition.GetCell(level, n));
+                cellsets[level - 1].insert(partition.GetCell(level, n));
             }
         }
     }
@@ -55,13 +55,13 @@ public:
             return true;
         }
 
-        if (l < 1 || (l - 1) >= static_cast<LevelID>(cellsets.size())) 
+        if (l < 1 || (l - 1) >= static_cast<LevelID>(cellsets.size()))
         {
-            util::Log(logERROR) << "Incorrect level be passed to" 
-                                << typeid(*this).name() << "::" << __func__;
+            util::Log(logERROR) << "Incorrect level be passed to" << typeid(*this).name()
+                                << "::" << __func__;
             return false;
         }
-        return (cellsets[l-1].find(c) != cellsets[l-1].end());
+        return (cellsets[l - 1].find(c) != cellsets[l - 1].end());
     }
 
     void Clear()
@@ -74,7 +74,7 @@ public:
 
     std::string Statistic() const
     {
-        if (!isIncremental) 
+        if (!isIncremental)
         {
             return "Nothing has been recorded in cell_update_record.\n";
         }
@@ -109,22 +109,20 @@ public:
             ss << ") be updated.";
 
             float percentage = (float)(sumOfUpdates * 100) / sumOfCells;
-            ss <<std::setprecision(4) << "  About " << percentage << "% in total.\n";
+            ss << std::setprecision(4) << "  About " << percentage << "% in total.\n";
 
             return ss.str();
         }
     }
 
-private:
-    MultiLevelCellIDSet                     cellsets;
-    const partitioner::MultiLevelPartition  &partition;
-    bool                                    isIncremental;
+  private:
+    MultiLevelCellIDSet cellsets;
+    const partitioner::MultiLevelPartition &partition;
+    bool isIncremental;
 };
-
 }
 
 using CellUpdateRecord = detail::CellUpdateRecordImpl;
-
 }
 }
 

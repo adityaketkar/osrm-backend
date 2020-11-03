@@ -1,10 +1,10 @@
 #ifndef OSRM_CELLS_CUSTOMIZER_HPP
 #define OSRM_CELLS_CUSTOMIZER_HPP
 
+#include "customizer/cell_update_record.hpp"
 #include "partitioner/cell_storage.hpp"
 #include "partitioner/multi_level_partition.hpp"
 #include "util/query_heap.hpp"
-#include "customizer/cell_update_record.hpp"
 
 #include <tbb/enumerable_thread_specific.h>
 #include <tbb/parallel_for.h>
@@ -133,7 +133,7 @@ class CellCustomizer
                                       if (cell_update_record.Check(level, id))
                                       {
                                           Customize(
-                                          graph, heap, cells, allowed_nodes, metric, level, id);
+                                              graph, heap, cells, allowed_nodes, metric, level, id);
                                       }
                                   }
                               });

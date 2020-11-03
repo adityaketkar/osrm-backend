@@ -57,8 +57,7 @@ struct UpdaterConfig final : storage::IOConfig
                     ".osrm.enw"},
                    {},
                    {".osrm.datasource_names"}),
-          valid_now(0),
-          incremental(false)
+          valid_now(0), incremental(false)
     {
     }
 
