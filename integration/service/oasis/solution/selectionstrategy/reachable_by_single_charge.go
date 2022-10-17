@@ -18,18 +18,30 @@ import (
 
 const maxOverlapPointsNum = 500
 
-// Reachable chargestations from orig already be filterred by currage energy range as radius
-// For destination, the filter is a dynamic value, depend on where is the nearest charge station.
-// We want to make user has enough energy when reach destination
-// The energy level is safeRange + nearest charge station's distance to destination
+//. Preferred charge level = Like we want to always keep 20% energy in the car for longer battery, so 20% is the safe charge level.
+//. Applicable on arrival at charge station
+//. Safe charge level = Application on arrival at user destination
+//. Safe charge level is a level where user can reach destination with enough energy to drive to a charge station with preferred charge level
+
+// Reachable charging stations from orig are already filtered basis current range, as we are aware of it at the start.
+// For destination, the filter is a dynamic value, depend on where is the nearest charge station (you can stop on the single charging station and fill enough juice to get destination inside isochrone)
+// We also want to make sure user has enough energy when they reach destination
+// The required range to fill on the single stop is safeRange + dist(chargingStation, destination)
+//! no idea what below lines mean
 // If there is one or several charge stations could be found in both origStationsResp and destStationsResp
 // We think the result is reachable by single charge station
+// @return: list of overlap charge stations
 func GetOverlapChargeStations4OrigDest(req *oasis.Request, routedistance float64, resourceMgr *resourcemanager.ResourceMgr) osrm.Coordinates {
+	//! We only passed first route's distance to this function
+	// todo Need to find 1. why and 2. are the route responses sorted by distance
+
 	// only possible when currRange + maxRange > distance + safeRange
+	//.(border case is : use currRange to reach CS, charge to full and reach dest with safeRange remaining)
 	if req.CurrRange+req.MaxRange < routedistance+req.SafeLevel {
 		return nil
 	}
 
+	//. place layer finds overlap charge stations
 	origStations := resourceMgr.IteratorGenerator().NewIterator4Orig(req)
 	destStations := resourceMgr.IteratorGenerator().NewIterator4Dest(req)
 	overlap := iteratoralg.FindOverlapBetweenStations(origStations, destStations)

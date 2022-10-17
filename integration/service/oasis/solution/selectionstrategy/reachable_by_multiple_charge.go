@@ -21,6 +21,7 @@ import (
 )
 
 // GenerateSolutions4ChargeStationBasedRoute creates optimal charge solution based on charge station graph
+//! y u no use next method??
 func GenerateSolutions4ChargeStationBasedRoute(oasisReq *oasis.Request,
 	resourceMgr *resourcemanager.ResourceMgr) ([]*oasis.Solution, error) {
 
@@ -48,7 +49,8 @@ func GenerateSolutions4ChargeStationBasedRoute(oasisReq *oasis.Request,
 	return targetSolutions, nil
 }
 
-func generateSolutions4SearchAlongRoute(oasisReq *oasis.Request, routeResp *route.Response,
+// generates solution using search along route method. Interestingly, not referenced anywhere.
+func GenerateSolutions4SearchAlongRoute(oasisReq *oasis.Request, routeResp *route.Response,
 	oc *osrmconnector.OSRMConnector, finder place.IteratorGenerator) []*oasis.Solution {
 
 	targetSolutions := make([]*oasis.Solution, 0)

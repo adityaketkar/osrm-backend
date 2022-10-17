@@ -49,7 +49,7 @@ func GenerateSolution4NoChargeNeeded(routeResp *route.Response, remainRange floa
 	solution.Weight = routeResp.Routes[0].Weight
 	solution.RemainingRage = remainRange
 	solution.WeightName = routeResp.Routes[0].WeightName
-	solutions = append(solutions, solution)
+	solutions = append(solutions, solution) //. Append a single solution, no need to find other solutions
 
 	return solutions, nil
 }

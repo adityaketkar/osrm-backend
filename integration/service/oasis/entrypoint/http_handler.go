@@ -15,6 +15,8 @@ type httpHandler struct {
 }
 
 // NewHttpHandler creates new Handler object
+//. Oasis is only a service to determine charging stations. All other data like path costs and charging
+//. station information are provided by other services
 func NewHttpHandler(osrmBackend, finderType, searchEndpoint, apiKey, apiSignature, dataFolderPath string) (*httpHandler, error) {
 	resourceMgr, err := resourcemanager.NewResourceMgr(osrmBackend, finderType, searchEndpoint, apiKey, apiSignature, dataFolderPath)
 	if err != nil {
@@ -38,6 +40,7 @@ func (h *httpHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	}
 
 	// Calculate optimal charge solution
+	//. layer 1 entrypoint passes the data to layer 2 solution
 	statusCode, solutions, err := solution.NewGeneratorImpl(h.resourceMgr).Generate(oasisReq)
 	if err != nil {
 		generateResponseWhenMetError(w, statusCode, err)

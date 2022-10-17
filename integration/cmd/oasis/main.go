@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -14,10 +15,12 @@ import (
 	"github.com/golang/glog"
 )
 
+// main.go for oasis api
 func main() {
 	flag.Parse()
 	appversion.PrintExit()
 	defer glog.Flush()
+	fmt.Print(flags.listenPort)
 
 	if flags.cpuProfileFile != "" {
 		f, err := os.Create(flags.cpuProfileFile)
