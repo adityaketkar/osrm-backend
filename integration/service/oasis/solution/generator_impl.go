@@ -49,7 +49,7 @@ func (g *generatorImpl) Generate(oasisReq *oasis.Request) (int, []*oasis.Solutio
 	// check whether orig and dest reachable range covers shared stations
 	//. ie. check if possible in single charge
 	//! notice we only pass the first route's distance to HasEnoughEnergy (check implementation of GetOverlapChargeStations4OrigDest to know why)
-	//. for now, assume we only assume best case scenario for above
+	//. for now, we only assume best case scenario for above
 	//. also observation: can't see any example where two routes are returned
 	overlap := selectionstrategy.GetOverlapChargeStations4OrigDest(oasisReq, routeResp.Routes[0].Distance, g.resourceMgr)
 	if len(overlap) > 0 {

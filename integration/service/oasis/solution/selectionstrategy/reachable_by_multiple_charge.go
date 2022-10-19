@@ -1,6 +1,7 @@
 package selectionstrategy
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/Telenav/osrm-backend/integration/api/nav"
@@ -52,10 +53,12 @@ func GenerateSolutions4ChargeStationBasedRoute(oasisReq *oasis.Request,
 // generates solution using search along route method. Interestingly, not referenced anywhere.
 func GenerateSolutions4SearchAlongRoute(oasisReq *oasis.Request, routeResp *route.Response,
 	oc *osrmconnector.OSRMConnector, finder place.IteratorGenerator) []*oasis.Solution {
-
+	glog.Infof("Generating solutions search along route")
 	targetSolutions := make([]*oasis.Solution, 0)
 
 	chargeLocations := chargeLocationSelection(oasisReq, routeResp)
+	glog.Infof("Charge locations: ")
+	fmt.Print(chargeLocations)
 	for _, locations := range chargeLocations {
 		c := iteratoralg.CalculateWeightBetweenNeighbors(locations, oc, finder)
 		querier := iteratoralg.NewQuerierBasedOnWeightBetweenNeighborsChan(c)
@@ -68,13 +71,16 @@ func GenerateSolutions4SearchAlongRoute(oasisReq *oasis.Request, routeResp *rout
 			targetSolutions = append(targetSolutions, targetSolution)
 		}
 	}
-
+	glog.Infof("target solutions")
+	fmt.Print(targetSolutions)
 	return targetSolutions
 }
 
 // For each route response, will generate an array of *nav.Location
 // Each array contains: start point, first charge point(could also be start point), second charge point, ..., end point
 func chargeLocationSelection(oasisReq *oasis.Request, routeResp *route.Response) [][]*nav.Location {
+	glog.Infof("chargeLocationSelection inside")
+
 	results := [][]*nav.Location{}
 	for _, route := range routeResp.Routes {
 
@@ -104,6 +110,7 @@ func chargeLocationSelection(oasisReq *oasis.Request, routeResp *route.Response)
 }
 
 func findChargeLocation4Route(route *route.Route, result []*nav.Location, currEnergy, preferLevel, maxRange float64) ([]*nav.Location, float64) {
+	glog.Infof("findChargeLocation4Route inside")
 	for _, leg := range route.Legs {
 		for _, step := range leg.Steps {
 			if (currEnergy - step.Distance) < preferLevel {
